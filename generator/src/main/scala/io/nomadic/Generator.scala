@@ -3,9 +3,11 @@ package io.nomadic
 import com.google.protobuf.CodedInputStream
 import com.google.protobuf.ExtensionRegistry
 import com.google.protobuf.Descriptors._
-import com.google.protobuf.compiler.PluginProtos.{CodeGeneratorResponse, CodeGeneratorRequest}
-import scala.collection.JavaConverters._
+import com.google.protobuf.compiler.PluginProtos.{CodeGeneratorRequest, CodeGeneratorResponse}
+import io.nomadic.codegen.generators.{GrpcClient, client, server}
+import org.fusesource.scalate.TemplateEngine
 
+import scala.collection.JavaConverters._
 import scalapb.compiler.{DescriptorImplicits, FunctionalPrinter}
 import scalapb.options.compiler.Scalapb
 
@@ -17,6 +19,8 @@ object Generator extends protocbridge.ProtocCodeGenerator {
   override def suggestedDependencies: Seq[protocbridge.Artifact] = Nil
 
   override def run(req: Array[Byte]): Array[Byte] = run(CodedInputStream.newInstance(req))
+
+  val engine: TemplateEngine = new TemplateEngine
 
   def run(input: CodedInputStream): Array[Byte] = {
     val registry = ExtensionRegistry.newInstance()
@@ -35,12 +39,25 @@ object Generator extends protocbridge.ProtocCodeGenerator {
             }
 
           val implicits = new DescriptorImplicits(params, fileDescByName.values.toVector)
-          val generator = new FileGenerator(implicits)
+
+          val defaultPort = 8080
+
+          val iclientGenerator = GrpcClient()(engine, implicits)
+          val serverGenerator = server(defaultPort)(engine, implicits)
           request.getFileToGenerateList.asScala.foreach {
             name =>
               val fileDesc = fileDescByName(name)
-              val responseFile = generator.generateFile(fileDesc)
-              b.addFile(responseFile)
+
+              val apiGatewayHostname = s"api.gateway.${fileDesc.getOptions.getJavaPackage}"
+              val localhostHostname = "localhost"
+
+              b.addFile(
+                client(defaultPort, localhostHostname)(engine, implicits)
+                  .generateFile(fileDesc)
+              )
+
+              b.addFile(iclientGenerator.generateFile(fileDesc))
+              b.addFile(serverGenerator.generateFile(fileDesc))
           }
           b.build.toByteArray
         }

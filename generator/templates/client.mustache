@@ -1,0 +1,28 @@
+{{#root}}
+package {{javaPackage}}
+
+{{#services}}
+import {{serviceTypeName}}Grpc._
+{{/services}}
+
+import io.grpc.netty.{NegotiationType, NettyChannelBuilder}
+
+object client extends GrpcClient {
+
+    private val host = "{{host}}"
+    private val port = {{port}}
+
+    private val negotiationType: NegotiationType = {{negotiationType}}
+
+    {{#services}}
+        lazy val {{serviceName}}: {{serviceTypeName}}Stub = {{serviceTypeName}}Grpc.stub(
+        channel = NettyChannelBuilder
+        .forAddress(host, port)
+        .negotiationType(negotiationType)
+        .build
+        )
+    {{/services}}
+
+}
+
+{{/root}}

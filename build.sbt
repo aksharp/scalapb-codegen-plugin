@@ -7,21 +7,30 @@ ThisBuild / scalaVersion := Scala212
 lazy val generator = (project in file("generator"))
   .enablePlugins(AssemblyPlugin)
   .settings(
-      crossScalaVersions in ThisBuild := Seq(Scala212, Scala210),
+    crossScalaVersions in ThisBuild := Seq(Scala212, Scala210),
 
-      organization := "io.nomadic",
+    organization := "io.nomadic",
 
-      name := "scalapb-grpc-client-server-mocks-codegen-plugin",
+    name := "scalapb-grpc-client-server-mocks-codegen-plugin",
 
-      libraryDependencies ++= Seq(
-          "com.thesamet.scalapb" %% "compilerplugin" % scalapb.compiler.Version.scalapbVersion
-      ),
+    libraryDependencies ++= Seq(
+      "com.thesamet.scalapb" %% "compilerplugin" % scalapb.compiler.Version.scalapbVersion,
+      "org.scalatra.scalate" %% "scalate-core" % "1.9.5"
+    ),
 
-      assemblyOption in assembly := (assemblyOption in assembly).value.copy(
-        prependShellScript = Some(sbtassembly.AssemblyPlugin.defaultUniversalScript(shebang = !isWindows))
-      ),
+    assemblyOption in assembly := (assemblyOption in assembly).value.copy(
+      prependShellScript = Some(sbtassembly.AssemblyPlugin.defaultUniversalScript(shebang = !isWindows))
+    ),
 
-      Compile / mainClass := Some("io.nomadic.Main")
+    unmanagedResourceDirectories in Compile += {
+      println(s"\n\n #### baseDirectory.value = ${baseDirectory.value} \n\n")
+      baseDirectory.value / "templates"
+    },
+
+    Compile / mainClass := Some("io.nomadic.Main")
+//
+//    resourceDirectory in Compile := file(".") / "./generator/src/main/scala/templates",
+//    resourceDirectory in Runtime := file(".") / "./generator/src/main/scala/templates"
   )
 
 def isWindows: Boolean = sys.props("os.name").startsWith("Windows")
@@ -30,8 +39,13 @@ def isWindows: Boolean = sys.props("os.name").startsWith("Windows")
 // code for this project. To accomplish that, we use the assembly task to create a fat jar of the
 // generator, and provide this to sbt-protoc as a plugin.
 lazy val e2e = (project in file("e2e"))
-.settings(
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+      "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
+      "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
+      "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
+    ),
 
     // Makes the e2e project depends on assembling the generator
     Compile / PB.generate := ((Compile / PB.generate) dependsOn (generator / Compile / assembly)).value,
@@ -45,13 +59,13 @@ lazy val e2e = (project in file("e2e"))
 
       // Creates a target using the assembled
       protocbridge.Target(
-        generator=PB.gens.plugin(
+        generator = PB.gens.plugin(
           "mygen",
           (generator / assembly / target).value / "scalapb-grpc-client-server-mocks-codegen-plugin-assembly-" + version.value + ".jar"
         ),
-        outputPath=(Compile / sourceManaged).value,
-        options=Seq("grpc", "java_conversions")
+        outputPath = (Compile / sourceManaged).value,
+        options = Seq("grpc", "java_conversions")
       )
     ),
 
-)
+  )

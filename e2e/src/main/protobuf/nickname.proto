@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+import "scalapb/scalapb.proto";
+
+option (scalapb.options) = {
+  scope: FILE
+  flat_package: true
+  single_file: true
+  lenses: true
+};
+
+package io.nomadic.grpc;
+
+option java_package = "io.nomadic.funWithNames";
+
+message Person {
+    string name = 1;
+    int32 age = 2;
+}
+
+message PersonRequest {
+    string name = 1;
+    int32 age = 2;
+}
+
+message PersonReply {
+    string nickname = 1;
+}
+
+message NicknameRequest {
+    string nickname = 1;
+}
+
+message NicknameReply {
+    string name = 1;
+}
+
+service GenerateNickname {
+    rpc CreateNickname (PersonRequest) returns (PersonReply) {}
+    rpc GuessName (NicknameRequest) returns (NicknameReply) {}
+}

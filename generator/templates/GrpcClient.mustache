@@ -1,0 +1,17 @@
+{{#root}}
+package {{javaPackage}}
+
+{{#services}}
+import {{serviceTypeName}}Grpc._
+{{/services}}
+
+
+trait GrpcClient {
+
+{{#services}}
+    val {{serviceName}}: {{serviceTypeName}}
+{{/services}}
+
+}
+
+{{/root}}
