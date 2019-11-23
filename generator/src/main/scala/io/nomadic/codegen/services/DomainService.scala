@@ -81,6 +81,7 @@ object DomainService {
             fieldName = fieldName,
             fieldTypeName = scalaType,
             fieldGenerator = toFieldGenerator(scalaType),
+            fieldForExpressionGenerator = toFieldForExpressionGenerator(scalaType),
             fieldNameOrOptionFieldName = if (field.getJavaType == JavaType.MESSAGE) s"Option($fieldName)" else fieldName
           )
         }).toList
@@ -107,6 +108,24 @@ object DomainService {
     generators.getOrElse(
       scalaType,
       s"a$scalaType()"
+    )
+  }
+
+  def toFieldForExpressionGenerator(
+                                     scalaType: String
+                                   ): String = {
+    val generators = Map(
+      "String" -> "Gen.alphaNumStr",
+      "Boolean" -> "Gen.oneOf(Seq(true, false))",
+      "Double" -> "Gen.choose(min = Double.MinValue, max = Double.MaxValue)",
+      "Float" -> "Gen.choose(min = Float.MinValue, max = Float.MaxValue)",
+      "Int" -> "Gen.choose(min = Int.MinValue, max = Int.MaxValue)",
+      "Long" -> "Gen.choose(min = Long.MinValue, max = Long.MaxValue)",
+      "Array[Byte]" -> "Gen.alphaNumStr.map(_.getBytes)"
+    )
+    generators.getOrElse(
+      scalaType,
+      s"${scalaType}Gen()"
     )
   }
 
@@ -171,11 +190,11 @@ object DomainService {
 
   def toServicesAsArguments(services: List[Service]): List[WithSeparator[Service]] = {
     withSeparator(services)
-//    services match {
-//      case Nil => Nil
-//      case head :: Nil => List(WithSeparator(head, ""))
-//      case other => other.init.map(s => WithSeparator(s, ",")) :+ WithSeparator(other.last, "")
-//    }
+    //    services match {
+    //      case Nil => Nil
+    //      case head :: Nil => List(WithSeparator(head, ""))
+    //      case other => other.init.map(s => WithSeparator(s, ",")) :+ WithSeparator(other.last, "")
+    //    }
   }
 
   def withSeparator[A](list: List[A], separator: String = ","): List[WithSeparator[A]] = {

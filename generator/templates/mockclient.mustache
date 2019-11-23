@@ -1,0 +1,14 @@
+{{#root}}
+    package {{javaPackage}}.mocks
+
+    import {{javaPackage}}._
+    import {{javaPackage}}.mocks._
+
+    case class GrpcMockClient(
+    // for each grpc service
+    {{#servicesAsArguments}}
+        {{#value}}{{serviceName}}: {{serviceTypeName}}Grpc.{{serviceTypeName}} = new {{serviceTypeName}}Mock{{/value}}{{separator}}
+    {{/servicesAsArguments}}
+    ) extends GrpcClient
+
+{{/root}}

@@ -14,8 +14,11 @@ class NicknameSpec extends WordSpec with Matchers with Eventually {
     Await.result(for {
       res <- io.nomadic.funWithNames.client.generateNickname.createNickname(
         request = PersonRequest(
-          name = "Alex",
-          age = 42
+          person = Option(io.nomadic.funWithNames.mocks.aPerson(
+            name = "Alex",
+            age = 42
+          )),
+          suggestedNickname = "blah"
         )
       )
     } yield {

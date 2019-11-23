@@ -12,9 +12,11 @@ case class mocks(implicit val engine: TemplateEngine,
                   ) extends MustacheTemplateBase[mocksData] {
 
   override def getTemplateData(fileDesc: Descriptors.FileDescriptor): mocksData = {
+    val services = DomainService.toServicesExt(fileDesc)
     mocksData(
       javaPackage = fileDesc.getOptions.getJavaPackage,
-      services = DomainService.toServicesExt(fileDesc)
+      services = services,
+      messages = services.flatMap(_.messages).distinct
     )
   }
 }

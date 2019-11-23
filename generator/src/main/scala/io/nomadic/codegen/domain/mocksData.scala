@@ -2,5 +2,6 @@ package io.nomadic.codegen.domain
 
 case class mocksData(
                       javaPackage: String,
-                      services: List[ServiceExt]
+                      services: List[ServiceExt],
+                      messages: List[Message]
                     )

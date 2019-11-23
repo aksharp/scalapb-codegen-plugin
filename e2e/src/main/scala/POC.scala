@@ -2,6 +2,7 @@ import io.grpc.Metadata.BinaryMarshaller
 import io.grpc.stub.MetadataUtils
 import io.grpc._
 import io.nomadic.funWithNames.PredictorGrpc.PredictorStub
+import io.nomadic.funWithNames.mocks.aPersonReply
 import io.nomadic.funWithNames.{GenerateNicknameGrpc, GrpcClient, NicknameReply, NicknameRequest, PersonReply, PersonRequest, PredictorGrpc}
 import org.scalacheck.Gen
 
@@ -26,8 +27,7 @@ object Server extends App {
   }
   val predictor = new PredictorGrpc.Predictor {
     override def predictNickname(request: PersonRequest): Future[PersonReply] = Future.successful(
-      //TODO: make sure it generate under mocks.... io.nomadic.funWithNames.mocks.aPersonReply()
-      io.nomadic.funWithNames.mocks.GenerateNicknameMock.aPersonReply()
+      io.nomadic.funWithNames.mocks.aPersonReply()
 //      PersonReply(
 //        nickname = s"I predict your nickname to be ${request.name}"
 //      )

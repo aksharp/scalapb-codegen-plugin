@@ -1,42 +1,71 @@
 {{#root}}
 
-package {{javaPackage}}.mocks
+    package {{javaPackage}}.mocks
 
-import {{javaPackage}}._
-import org.scalacheck.Gen
+    import {{javaPackage}}._
+    import org.scalacheck.Gen
 
-import scala.concurrent.Future
+    import scala.concurrent.Future
 
-{{#services}}
-object {{serviceTypeName}}Mock {
+
+    // Stubs
+
     {{#messages}}
-    def a{{messageTypeName}}(
+        object a{{messageTypeName}} {
+
+        def apply(
         {{#fields}}
-        {{#value}}{{fieldName}}: {{fieldTypeName}} = {{fieldGenerator}}{{/value}}{{separator}}
+            {{#value}}{{fieldName}}: {{fieldTypeName}} = {{fieldGenerator}}{{/value}}{{separator}}
         {{/fields}}
-    ): {{messageTypeName}} = {{messageTypeName}}(
+        ): {{messageTypeName}} = {{messageTypeName}}(
         {{#fields}}
-        {{#value}}
-            {{fieldName}} = {{fieldNameOrOptionFieldName}}{{separator}}
-        {{/value}}
+            {{#value}}
+                {{fieldName}} = {{fieldNameOrOptionFieldName}}{{separator}}
+            {{/value}}
         {{/fields}}
-    )
+        )
+
+        }
     {{/messages}}
-}
 
-case class {{serviceTypeName}}Mock(
-    {{#serviceMethods}}
-    {{#value}}{{methodName}}Mock: {{methodInputType}} => Future[{{methodOutputType}}] = _ => Future.successful({{serviceTypeName}}Mock.a{{methodOutputType}}()){{/value}}{{separator}}
-    {{/serviceMethods}}
-) extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
-    {{#serviceMethods}}
-    {{#value}}
-    override def {{methodName}}(request: {{methodInputType}}): Future[{{methodOutputType}}] = {{methodName}}Mock(request)
-    {{/value}}
-    {{/serviceMethods}}
-}
 
-{{/services}}
+    // Generators
+
+    {{#messages}}
+        object {{messageTypeName}}Gen {
+        def apply(): Gen[{{messageTypeName}}] =
+        for {
+        {{#fields}}
+            {{#value}}
+                {{fieldName}} <- {{fieldForExpressionGenerator}}
+            {{/value}}
+        {{/fields}}
+        } yield {
+            {{messageTypeName}}(
+            {{#fields}}
+                {{#value}}
+                    {{fieldName}} = {{fieldNameOrOptionFieldName}}{{separator}}
+                {{/value}}
+            {{/fields}}
+            )
+        }
+        }
+    {{/messages}}
+
+    {{#services}}
+        case class {{serviceTypeName}}Mock(
+        {{#serviceMethods}}
+            {{#value}}{{methodName}}Mock: {{methodInputType}} => Future[{{methodOutputType}}] = _ => Future.successful(a{{methodOutputType}}()){{/value}}{{separator}}
+        {{/serviceMethods}}
+        ) extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
+        {{#serviceMethods}}
+            {{#value}}
+                override def {{methodName}}(request: {{methodInputType}}): Future[{{methodOutputType}}] = {{methodName}}Mock(request)
+            {{/value}}
+        {{/serviceMethods}}
+        }
+
+    {{/services}}
 
 
 {{/root}}
