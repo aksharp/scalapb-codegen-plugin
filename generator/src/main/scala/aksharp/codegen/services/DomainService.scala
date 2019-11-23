@@ -173,6 +173,7 @@ object DomainService {
         (acc, s) =>
           acc :+
             ServiceExt(
+              serviceName = s"${s.getName.head.toLower}${s.getName.tail}",
               serviceTypeName = s.getName,
               serviceMethods = withSeparator(toMethods(s)),
               messages = toMessages(s)

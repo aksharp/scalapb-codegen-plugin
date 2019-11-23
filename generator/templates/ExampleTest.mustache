@@ -1,0 +1,39 @@
+{{#root}}
+/*
+package {{javaPackage}}.example.test
+
+import {{javaPackage}}._
+import org.scalatest.{Matchers, WordSpec}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext}
+
+class ExampleSpec extends WordSpec with Matchers {
+
+  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
+
+  "example test of running server returning default empty responses" in {
+
+    // TODO: start server before testing (refer to example main in {{javaPackage}}.Main)
+
+{{#services}}
+{{#serviceMethods}}
+
+    {{#value}}
+
+    // Test for {{serviceName}}.{{methodName}}
+    val {{serviceName}}_{{methodName}}_FutureResult = client.{{serviceName}}.{{methodName}}(
+      request = {{methodInputType}}()
+    )
+    val {{serviceName}}_{{methodName}}_Result = Await.result({{serviceName}}_{{methodName}}_FutureResult, Duration.Inf)
+    val {{serviceName}}_{{methodName}}_ExpectedResult = {{methodOutputType}}()
+    {{serviceName}}_{{methodName}}_Result should be ({{serviceName}}_{{methodName}}_ExpectedResult)
+
+    {{/value}}
+{{/serviceMethods}}
+{{/services}}
+
+  }
+
+}
+*/
+{{/root}}

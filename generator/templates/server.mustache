@@ -28,6 +28,8 @@ object server { self =>
             .build
             .start
 
+        System.out.println(s"*** running gRPC server on port $port")
+
         sys.addShutdownHook {
             System.err.println("*** shutting down gRPC server since JVM is shutting down")
             self.stop()

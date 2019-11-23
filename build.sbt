@@ -40,7 +40,7 @@ def isWindows: Boolean = sys.props("os.name").startsWith("Windows")
 lazy val e2e = (project in file("e2e"))
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+      "org.scalatest" %% "scalatest" % "3.0.5",
       "org.scalacheck" %% "scalacheck" % "1.14.2",
       "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
