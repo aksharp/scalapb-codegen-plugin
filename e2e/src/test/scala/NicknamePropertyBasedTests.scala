@@ -24,7 +24,7 @@ object NicknamePropertyBasedTests extends Properties("Nickname generator propert
       val expectedTransformation = s"${person.name}, the $suffix"
       println(s"%%% expectedTransformation = $expectedTransformation")
 
-      val client = io.nomadic.funWithNames.mocks.GrpcMockClient(
+      val client = io.nomadic.funWithNames.mocks.mockclient(
         generateNickname = new GenerateNicknameMock(
           createNicknameMock = req => Future.successful(
             PersonReply(

@@ -1,10 +1,8 @@
 import io.grpc.Metadata.BinaryMarshaller
-import io.grpc.stub.MetadataUtils
 import io.grpc._
+import io.grpc.stub.MetadataUtils
 import io.nomadic.funWithNames.PredictorGrpc.PredictorStub
-import io.nomadic.funWithNames.mocks.aPersonReply
-import io.nomadic.funWithNames.{GenerateNicknameGrpc, GrpcClient, NicknameReply, NicknameRequest, PersonReply, PersonRequest, PredictorGrpc}
-import org.scalacheck.Gen
+import io.nomadic.funWithNames._
 
 import scala.concurrent.{ExecutionContext, Future}
 

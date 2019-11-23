@@ -4,7 +4,7 @@
     import {{javaPackage}}._
     import {{javaPackage}}.mocks._
 
-    case class GrpcMockClient(
+    case class mockclient(
     // for each grpc service
     {{#servicesAsArguments}}
         {{#value}}{{serviceName}}: {{serviceTypeName}}Grpc.{{serviceTypeName}} = new {{serviceTypeName}}Mock{{/value}}{{separator}}

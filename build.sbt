@@ -23,7 +23,6 @@ lazy val generator = (project in file("generator"))
     ),
 
     unmanagedResourceDirectories in Compile += {
-      println(s"\n\n #### baseDirectory.value = ${baseDirectory.value} \n\n")
       baseDirectory.value / "templates"
     },
 
@@ -61,7 +60,7 @@ lazy val e2e = (project in file("e2e"))
       // Creates a target using the assembled
       protocbridge.Target(
         generator = PB.gens.plugin(
-          "mygen",
+          "scalapb-grpc-client-server-mocks-codegen-plugin",
           (generator / assembly / target).value / "scalapb-grpc-client-server-mocks-codegen-plugin-assembly-" + version.value + ".jar"
         ),
         outputPath = (Compile / sourceManaged).value,

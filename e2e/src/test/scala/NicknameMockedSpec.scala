@@ -13,7 +13,7 @@ class NicknameMockedSpec extends WordSpec with Matchers with Eventually {
 
   "test" in {
     Await.result(for {
-      res <- io.nomadic.funWithNames.mocks.GrpcMockClient(
+      res <- io.nomadic.funWithNames.mocks.mockclient(
         generateNickname = new GenerateNicknameMock(
           createNicknameMock = req => Future.successful(
             PersonReply(
