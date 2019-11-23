@@ -1,4 +1,4 @@
-package io.nomadic.codegen.domain
+package aksharp.codegen.domain
 
 case class clientData(
                        port: String,

@@ -9,7 +9,7 @@ lazy val generator = (project in file("generator"))
   .settings(
     crossScalaVersions in ThisBuild := Seq(Scala212, Scala210),
 
-    organization := "io.nomadic",
+    organization := "aksharp",
 
     name := "scalapb-grpc-client-server-mocks-codegen-plugin",
 
@@ -26,7 +26,7 @@ lazy val generator = (project in file("generator"))
       baseDirectory.value / "templates"
     },
 
-    Compile / mainClass := Some("io.nomadic.Main")
+    Compile / mainClass := Some("aksharp.Main")
 //
 //    resourceDirectory in Compile := file(".") / "./generator/src/main/scala/templates",
 //    resourceDirectory in Runtime := file(".") / "./generator/src/main/scala/templates"

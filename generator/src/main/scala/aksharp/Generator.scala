@@ -1,9 +1,9 @@
-package io.nomadic
+package aksharp
 
 import com.google.protobuf.Descriptors._
 import com.google.protobuf.{CodedInputStream, ExtensionRegistry}
 import com.google.protobuf.compiler.PluginProtos.{CodeGeneratorRequest, CodeGeneratorResponse}
-import io.nomadic.codegen.generators.{GrpcClient, ServicesImpl, client, mockclient, mocks, server}
+import aksharp.codegen.generators.{GrpcClient, ServicesImpl, client, mockclient, mocks, server}
 import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 import scalapb.options.compiler.Scalapb

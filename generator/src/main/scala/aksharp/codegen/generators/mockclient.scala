@@ -1,9 +1,9 @@
-package io.nomadic.codegen.generators
+package aksharp.codegen.generators
 
 import com.google.protobuf.Descriptors
-import io.nomadic.codegen.domain.mockclientData
-import io.nomadic.codegen.services.DomainService
-import io.nomadic.codegen.util.MustacheTemplateBase
+import aksharp.codegen.domain.mockclientData
+import aksharp.codegen.services.DomainService
+import aksharp.codegen.util.MustacheTemplateBase
 import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 

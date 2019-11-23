@@ -1,9 +1,9 @@
-package io.nomadic.codegen.services
+package aksharp.codegen.services
 
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.JavaType
 import com.google.protobuf.Descriptors.{FieldDescriptor, FileDescriptor}
-import io.nomadic.codegen.domain.{Field, Message, Method, Service, ServiceExt, ServiceMethod}
+import aksharp.codegen.domain.{Field, Message, Method, Service, ServiceExt, ServiceMethod}
 
 import scala.collection.JavaConverters._
 import scala.util.{Failure, Success, Try}

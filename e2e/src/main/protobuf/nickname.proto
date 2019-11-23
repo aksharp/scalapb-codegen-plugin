@@ -9,9 +9,9 @@ option (scalapb.options) = {
   lenses: true
 };
 
-package io.nomadic.grpc;
+package aksharp.grpc;
 
-option java_package = "io.nomadic.funWithNames";
+option java_package = "aksharp.funWithNames";
 
 message Person {
     string name = 1;

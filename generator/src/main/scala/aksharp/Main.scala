@@ -1,4 +1,4 @@
-package io.nomadic
+package aksharp
 
 import com.google.protobuf.CodedInputStream
 

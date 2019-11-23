@@ -1,7 +1,7 @@
 package com.company.main
 
 import com.company.main.services.BidService
-import io.nomadic.bidder.BidderGrpc
+import aksharp.bidder.BidderGrpc
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.global
@@ -12,7 +12,7 @@ object Main extends App {
 
   val bidService: BidderGrpc.Bidder = new BidService
 
-  io.nomadic.bidder.server.run(
+  aksharp.bidder.server.run(
     bidder = bidService
   )
 

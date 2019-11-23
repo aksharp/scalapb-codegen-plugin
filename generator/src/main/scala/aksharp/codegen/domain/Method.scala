@@ -1,4 +1,4 @@
-package io.nomadic.codegen.domain
+package aksharp.codegen.domain
 
 case class Method(
                    methodName: String,

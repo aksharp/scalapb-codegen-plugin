@@ -1,6 +1,6 @@
 package com.company.main.services
 
-import io.nomadic.bidder.{BidRequest, BidResponse, BidderGrpc}
+import aksharp.bidder.{BidRequest, BidResponse, BidderGrpc}
 
 import scala.concurrent.Future
 

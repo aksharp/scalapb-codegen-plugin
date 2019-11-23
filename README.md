@@ -26,12 +26,12 @@ In the other project, add the following to `project/plugins.sbt`:
 ```
 addSbtPlugin("com.thesamet" % "sbt-protoc" % "0.99.27")
 
-libraryDependencies += "io.nomadic" %% "scalapb-grpc-client-server-mocks-codegen-plugin" % "0.1.0"
+libraryDependencies += "aksharp" %% "scalapb-grpc-client-server-mocks-codegen-plugin" % "0.1.0"
 ```
 
 and the following to your `build.sbt`:
 ```
 PB.targets in Compile := Seq(
-  io.nomadic.Generator -> (sourceManaged in Compile).value
+  aksharp.Generator -> (sourceManaged in Compile).value
 )
 ```

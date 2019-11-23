@@ -1,15 +1,15 @@
 import io.grpc.Metadata.BinaryMarshaller
 import io.grpc._
 import io.grpc.stub.MetadataUtils
-import io.nomadic.funWithNames.PredictorGrpc.PredictorStub
-import io.nomadic.funWithNames._
+import aksharp.funWithNames.PredictorGrpc.PredictorStub
+import aksharp.funWithNames._
 
 import scala.concurrent.{ExecutionContext, Future}
 
 object Server extends App {
 
-  io.nomadic.funWithNames.mocks.GenerateNicknameMock()
-  val x = io.nomadic.funWithNames.mocks.PredictorMock()
+  aksharp.funWithNames.mocks.GenerateNicknameMock()
+  val x = aksharp.funWithNames.mocks.PredictorMock()
 
   implicit val ec = ExecutionContext.global
   val generateNickname = new GenerateNicknameGrpc.GenerateNickname {
@@ -25,27 +25,27 @@ object Server extends App {
   }
   val predictor = new PredictorGrpc.Predictor {
     override def predictNickname(request: PersonRequest): Future[PersonReply] = Future.successful(
-      io.nomadic.funWithNames.mocks.aPersonReply()
+      aksharp.funWithNames.mocks.aPersonReply()
 //      PersonReply(
 //        nickname = s"I predict your nickname to be ${request.name}"
 //      )
     )
   }
 
-  io.nomadic.funWithNames.server.run(
-    generateNickname = io.nomadic.funWithNames.mocks.GenerateNicknameMock(), // generateNickname,
-    predictor = io.nomadic.funWithNames.mocks.PredictorMock() // predictor
+  aksharp.funWithNames.server.run(
+    generateNickname = aksharp.funWithNames.mocks.GenerateNicknameMock(), // generateNickname,
+    predictor = aksharp.funWithNames.mocks.PredictorMock() // predictor
   )
 }
 
 class POC {
 
   import io.grpc.netty.{NegotiationType, NettyChannelBuilder}
-  import io.nomadic.funWithNames.GenerateNicknameGrpc._
+  import aksharp.funWithNames.GenerateNicknameGrpc._
 
   object client extends GrpcClient {
 
-    private val host = "api.gateway.io.nomadic.funWithNames"
+    private val host = "api.gateway.aksharp.funWithNames"
     private val port = 8080
 
     private val negotiationType: NegotiationType = NegotiationType.PLAINTEXT

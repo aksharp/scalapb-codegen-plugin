@@ -1,4 +1,4 @@
-package io.nomadic.codegen.util
+package aksharp.codegen.util
 
 import java.io.File
 

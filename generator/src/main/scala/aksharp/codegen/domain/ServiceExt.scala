@@ -1,6 +1,6 @@
-package io.nomadic.codegen.domain
+package aksharp.codegen.domain
 
-import io.nomadic.codegen.services.DomainService.WithSeparator
+import aksharp.codegen.services.DomainService.WithSeparator
 
 case class ServiceExt(
                        serviceTypeName: String,

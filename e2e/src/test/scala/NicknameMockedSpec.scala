@@ -1,6 +1,6 @@
 
-import io.nomadic.funWithNames.mocks.GenerateNicknameMock
-import io.nomadic.funWithNames.{PersonReply, PersonRequest}
+import aksharp.funWithNames.mocks.GenerateNicknameMock
+import aksharp.funWithNames.{PersonReply, PersonRequest}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{Matchers, WordSpec}
 
@@ -13,7 +13,7 @@ class NicknameMockedSpec extends WordSpec with Matchers with Eventually {
 
   "test" in {
     Await.result(for {
-      res <- io.nomadic.funWithNames.mocks.mockclient(
+      res <- aksharp.funWithNames.mocks.mockclient(
         generateNickname = new GenerateNicknameMock(
           createNicknameMock = req => Future.successful(
             PersonReply(
@@ -24,8 +24,8 @@ class NicknameMockedSpec extends WordSpec with Matchers with Eventually {
       )
         .generateNickname
         .createNickname(
-          request = io.nomadic.funWithNames.mocks.aPersonRequest(
-            person = io.nomadic.funWithNames.mocks.aPerson(
+          request = aksharp.funWithNames.mocks.aPersonRequest(
+            person = aksharp.funWithNames.mocks.aPerson(
               name = "Alex",
               age = 42
             ),

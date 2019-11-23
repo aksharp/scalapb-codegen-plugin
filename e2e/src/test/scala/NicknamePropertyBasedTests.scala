@@ -1,6 +1,6 @@
 
-import io.nomadic.funWithNames.{Person, PersonReply, PersonRequest}
-import io.nomadic.funWithNames.mocks.{GenerateNicknameMock, PersonGen}
+import aksharp.funWithNames.{Person, PersonReply, PersonRequest}
+import aksharp.funWithNames.mocks.{GenerateNicknameMock, PersonGen}
 import org.scalacheck.Prop.forAll
 import org.scalacheck.{Gen, Properties}
 
@@ -24,7 +24,7 @@ object NicknamePropertyBasedTests extends Properties("Nickname generator propert
       val expectedTransformation = s"${person.name}, the $suffix"
       println(s"%%% expectedTransformation = $expectedTransformation")
 
-      val client = io.nomadic.funWithNames.mocks.mockclient(
+      val client = aksharp.funWithNames.mocks.mockclient(
         generateNickname = new GenerateNicknameMock(
           createNicknameMock = req => Future.successful(
             PersonReply(
