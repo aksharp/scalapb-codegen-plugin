@@ -76,10 +76,12 @@ object DomainService {
         .asScala
         .map(field => {
           val scalaType = toScalaType(field)
+          val fieldName = s"${field.getName.head.toLower}${field.getName.tail}"
           Field(
-            fieldName = s"${field.getName.head.toLower}${field.getName.tail}",
+            fieldName = fieldName,
             fieldTypeName = scalaType,
-            fieldGenerator = toFieldGenerator(scalaType)
+            fieldGenerator = toFieldGenerator(scalaType),
+            fieldNameOrOptionFieldName = if (field.getJavaType == JavaType.MESSAGE) s"Option($fieldName)" else fieldName
           )
         }).toList
 
@@ -121,7 +123,7 @@ object DomainService {
     )
 
     fileDescriptor.getJavaType match {
-      case JavaType.MESSAGE => fileDescriptor.toProto.getTypeName.replaceAll("\\.", "")
+      case JavaType.MESSAGE => fileDescriptor.toProto.getTypeName.split("\\.").last
       case JavaType.ENUM => "JavaType.ENUM is not yet supported"
       case javaType => m.getOrElse(javaType, s"Could not find match for JavaType: ${javaType.toString}")
     }

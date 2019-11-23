@@ -19,8 +19,8 @@ message Person {
 }
 
 message PersonRequest {
-    string name = 1;
-    int32 age = 2;
+    Person person = 1;
+    string suggestedNickname = 2;
 }
 
 message PersonReply {

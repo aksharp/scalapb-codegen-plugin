@@ -16,7 +16,7 @@ object Server extends App {
   val generateNickname = new GenerateNicknameGrpc.GenerateNickname {
     override def createNickname(request: PersonRequest): Future[PersonReply] = Future.successful(
       PersonReply(
-        nickname = s"${request.name}, the man!"
+        nickname = s"${request.person.get.name}, the man!"
       )
     )
 

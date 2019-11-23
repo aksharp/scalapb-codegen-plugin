@@ -17,7 +17,7 @@ object {{serviceTypeName}}Mock {
     ): {{messageTypeName}} = {{messageTypeName}}(
         {{#fields}}
         {{#value}}
-            {{fieldName}} = {{fieldName}}{{separator}}
+            {{fieldName}} = {{fieldNameOrOptionFieldName}}{{separator}}
         {{/value}}
         {{/fields}}
     )
