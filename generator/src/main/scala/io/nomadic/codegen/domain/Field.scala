@@ -5,5 +5,5 @@ case class Field(
                   fieldTypeName: String,
                   fieldGenerator: String,
                   fieldForExpressionGenerator: String,
-                  fieldNameOrOptionFieldName: String
+                  fieldNameOrOptionalOrSeq: String
                 )

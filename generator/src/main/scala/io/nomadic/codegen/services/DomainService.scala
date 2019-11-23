@@ -2,10 +2,11 @@ package io.nomadic.codegen.services
 
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.JavaType
-import com.google.protobuf.Descriptors.FileDescriptor
+import com.google.protobuf.Descriptors.{FieldDescriptor, FileDescriptor}
 import io.nomadic.codegen.domain.{Field, Message, Method, Service, ServiceExt, ServiceMethod}
 
 import scala.collection.JavaConverters._
+import scala.util.{Failure, Success, Try}
 
 object DomainService {
 
@@ -77,12 +78,13 @@ object DomainService {
         .map(field => {
           val scalaType = toScalaType(field)
           val fieldName = s"${field.getName.head.toLower}${field.getName.tail}"
+
           Field(
             fieldName = fieldName,
             fieldTypeName = scalaType,
             fieldGenerator = toFieldGenerator(scalaType),
             fieldForExpressionGenerator = toFieldForExpressionGenerator(scalaType),
-            fieldNameOrOptionFieldName = if (field.getJavaType == JavaType.MESSAGE) s"Option($fieldName)" else fieldName
+            fieldNameOrOptionalOrSeq = toFieldNameForAssignment(field)
           )
         }).toList
 
@@ -91,6 +93,20 @@ object DomainService {
       fields = withSeparator(fields)
     )
 
+  }
+
+  def toFieldNameForAssignment(field: FieldDescriptor): String = {
+    val fieldName = s"${field.getName.head.toLower}${field.getName.tail}"
+    if (field.getJavaType == JavaType.MESSAGE) {
+      if (field.isRepeated)
+        s"Seq($fieldName)"
+      else if (field.isOptional)
+        s"Option($fieldName)"
+      else
+        fieldName
+    } else {
+      fieldName
+    }
   }
 
   def toFieldGenerator(

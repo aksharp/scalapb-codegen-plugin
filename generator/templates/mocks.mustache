@@ -20,7 +20,7 @@
         ): {{messageTypeName}} = {{messageTypeName}}(
         {{#fields}}
             {{#value}}
-                {{fieldName}} = {{fieldNameOrOptionFieldName}}{{separator}}
+                {{fieldName}} = {{fieldNameOrOptionalOrSeq}}{{separator}}
             {{/value}}
         {{/fields}}
         )
@@ -44,7 +44,7 @@
             {{messageTypeName}}(
             {{#fields}}
                 {{#value}}
-                    {{fieldName}} = {{fieldNameOrOptionFieldName}}{{separator}}
+                    {{fieldName}} = {{fieldNameOrOptionalOrSeq}}{{separator}}
                 {{/value}}
             {{/fields}}
             )
