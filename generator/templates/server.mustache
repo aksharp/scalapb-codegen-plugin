@@ -1,26 +1,26 @@
 {{#root}}
-    package {{javaPackage}}
+package {{javaPackage}}
 
-    {{#services}}
-        import {{serviceTypeName}}Grpc._
-    {{/services}}
+{{#services}}
+import {{serviceTypeName}}Grpc._
+{{/services}}
 
-    import io.grpc.Server
-    import io.grpc.netty.NettyServerBuilder
+import io.grpc.Server
+import io.grpc.netty.NettyServerBuilder
 
-    import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext
 
-    object server { self =>
-        private[this] var s: Server = null
-        private val port = {{port}}
+object server { self =>
+    private[this] var s: Server = null
+    private val port = {{port}}
 
-        def run(
-    {{#servicesAsArguments}}
+    def run(
+{{#servicesAsArguments}}
             {{#value}}{{serviceName}}: {{serviceTypeName}}Grpc.{{serviceTypeName}}{{/value}}{{separator}}
-    {{/servicesAsArguments}}
-        )
-        (implicit ec: ExecutionContext): Unit = {
-            s = NettyServerBuilder
+{{/servicesAsArguments}}
+    )
+    (implicit ec: ExecutionContext): Unit = {
+        s = NettyServerBuilder
             .forPort(port)
     {{#services}}
             .addService({{serviceTypeName}}Grpc.bindService({{serviceName}}, ec))
@@ -28,20 +28,16 @@
             .build
             .start
 
-            sys.addShutdownHook {
-                System.err.println("*** shutting down gRPC server since JVM is shutting down")
-                self.stop()
-                System.err.println("*** server shut down")
-            }
-
-            s.awaitTermination()
+        sys.addShutdownHook {
+            System.err.println("*** shutting down gRPC server since JVM is shutting down")
+            self.stop()
+            System.err.println("*** server shut down")
         }
 
-        def stop(): Unit = {
-            if (s != null) {
-            s.shutdownNow()
-        }
+        s.awaitTermination()
     }
 
-    }
+    def stop(): Unit = if (s != null) { s.shutdownNow() }
+
+}
 {{/root}}

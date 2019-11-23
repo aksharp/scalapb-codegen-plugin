@@ -1,0 +1,20 @@
+{{#root}}
+/*
+
+Examples of Service Implementations
+
+package {{javaPackage}}
+
+import {{javaPackage}}._
+import scala.concurrent.Future
+
+{{#serviceMethods}}
+class {{serviceTypeName}}Impl extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
+{{#methods}}
+    override def {{methodName}}(req: {{methodInputType}}): Future[{{methodOutputType}}] = ???
+{{/methods}}
+}
+
+{{/serviceMethods}}
+*/
+{{/root}}

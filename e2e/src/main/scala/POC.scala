@@ -1,11 +1,17 @@
 import io.grpc.Metadata.BinaryMarshaller
 import io.grpc.stub.MetadataUtils
 import io.grpc._
-import io.nomadic.funWithNames.{GenerateNicknameGrpc, GrpcClient, NicknameReply, NicknameRequest, PersonReply, PersonRequest}
+import io.nomadic.funWithNames.PredictorGrpc.PredictorStub
+import io.nomadic.funWithNames.{GenerateNicknameGrpc, GrpcClient, NicknameReply, NicknameRequest, PersonReply, PersonRequest, PredictorGrpc}
+import org.scalacheck.Gen
 
 import scala.concurrent.{ExecutionContext, Future}
 
 object Server extends App {
+
+  io.nomadic.funWithNames.mocks.GenerateNicknameMock()
+  val x = io.nomadic.funWithNames.mocks.PredictorMock()
+
   implicit val ec = ExecutionContext.global
   val generateNickname = new GenerateNicknameGrpc.GenerateNickname {
     override def createNickname(request: PersonRequest): Future[PersonReply] = Future.successful(
@@ -18,12 +24,24 @@ object Server extends App {
       NicknameReply()
     )
   }
+  val predictor = new PredictorGrpc.Predictor {
+    override def predictNickname(request: PersonRequest): Future[PersonReply] = Future.successful(
+      //TODO: make sure it generate under mocks.... io.nomadic.funWithNames.mocks.aPersonReply()
+      io.nomadic.funWithNames.mocks.GenerateNicknameMock.aPersonReply()
+//      PersonReply(
+//        nickname = s"I predict your nickname to be ${request.name}"
+//      )
+    )
+  }
+
   io.nomadic.funWithNames.server.run(
-    generateNickname = generateNickname
+    generateNickname = io.nomadic.funWithNames.mocks.GenerateNicknameMock(), // generateNickname,
+    predictor = io.nomadic.funWithNames.mocks.PredictorMock() // predictor
   )
 }
 
 class POC {
+
   import io.grpc.netty.{NegotiationType, NettyChannelBuilder}
   import io.nomadic.funWithNames.GenerateNicknameGrpc._
 
@@ -42,6 +60,7 @@ class POC {
     val metadata = new Metadata()
     val binaryMarshaller: BinaryMarshaller[String] = new BinaryMarshaller[String] {
       override def toBytes(value: String): Array[Byte] = value.getBytes()
+
       override def parseBytes(serialized: Array[Byte]): String = new String(serialized)
     }
 
@@ -53,6 +72,7 @@ class POC {
     val channelWithInterceptor: Channel = ClientInterceptors.intercept(channel, interceptor)
 
     lazy val generateNickname: GenerateNicknameStub = GenerateNicknameGrpc.stub(channelWithInterceptor)
+    lazy val predictor: PredictorStub = PredictorGrpc.stub(channelWithInterceptor)
 
   }
 

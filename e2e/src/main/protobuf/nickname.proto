@@ -39,3 +39,7 @@ service GenerateNickname {
     rpc CreateNickname (PersonRequest) returns (PersonReply) {}
     rpc GuessName (NicknameRequest) returns (NicknameReply) {}
 }
+
+service Predictor {
+    rpc PredictNickname (PersonRequest) returns (PersonReply) {}
+}

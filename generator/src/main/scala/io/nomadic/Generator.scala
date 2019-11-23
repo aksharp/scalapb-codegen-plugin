@@ -1,15 +1,14 @@
 package io.nomadic
 
-import com.google.protobuf.CodedInputStream
-import com.google.protobuf.ExtensionRegistry
 import com.google.protobuf.Descriptors._
+import com.google.protobuf.{CodedInputStream, ExtensionRegistry}
 import com.google.protobuf.compiler.PluginProtos.{CodeGeneratorRequest, CodeGeneratorResponse}
-import io.nomadic.codegen.generators.{GrpcClient, client, server}
+import io.nomadic.codegen.generators.{GrpcClient, mocks, ServicesImpl, client, server}
 import org.fusesource.scalate.TemplateEngine
+import scalapb.compiler.DescriptorImplicits
+import scalapb.options.compiler.Scalapb
 
 import scala.collection.JavaConverters._
-import scalapb.compiler.{DescriptorImplicits, FunctionalPrinter}
-import scalapb.options.compiler.Scalapb
 
 /** This is the interface that code generators need to implement. */
 object Generator extends protocbridge.ProtocCodeGenerator {
@@ -44,6 +43,8 @@ object Generator extends protocbridge.ProtocCodeGenerator {
 
           val iclientGenerator = GrpcClient()(engine, implicits)
           val serverGenerator = server(defaultPort)(engine, implicits)
+          val servicesImplGenerator = ServicesImpl()(engine, implicits)
+          val serviceMocksGenerator = mocks()(engine, implicits)
           request.getFileToGenerateList.asScala.foreach {
             name =>
               val fileDesc = fileDescByName(name)
@@ -58,6 +59,8 @@ object Generator extends protocbridge.ProtocCodeGenerator {
 
               b.addFile(iclientGenerator.generateFile(fileDesc))
               b.addFile(serverGenerator.generateFile(fileDesc))
+              b.addFile(servicesImplGenerator.generateFile(fileDesc))
+              b.addFile(serviceMocksGenerator.generateFile(fileDesc))
           }
           b.build.toByteArray
         }

@@ -1,0 +1,42 @@
+{{#root}}
+
+package {{javaPackage}}.mocks
+
+import {{javaPackage}}._
+import org.scalacheck.Gen
+
+import scala.concurrent.Future
+
+{{#services}}
+object {{serviceTypeName}}Mock {
+    {{#messages}}
+    def a{{messageTypeName}}(
+        {{#fields}}
+        {{#value}}{{fieldName}}: {{fieldTypeName}} = {{fieldGenerator}}{{/value}}{{separator}}
+        {{/fields}}
+    ): {{messageTypeName}} = {{messageTypeName}}(
+        {{#fields}}
+        {{#value}}
+            {{fieldName}} = {{fieldName}}{{separator}}
+        {{/value}}
+        {{/fields}}
+    )
+    {{/messages}}
+}
+
+case class {{serviceTypeName}}Mock(
+    {{#serviceMethods}}
+    {{#value}}{{methodName}}Mock: {{methodInputType}} => Future[{{methodOutputType}}] = _ => Future.successful({{serviceTypeName}}Mock.a{{methodOutputType}}()){{/value}}{{separator}}
+    {{/serviceMethods}}
+) extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
+    {{#serviceMethods}}
+    {{#value}}
+    override def {{methodName}}(request: {{methodInputType}}): Future[{{methodOutputType}}] = {{methodName}}Mock(request)
+    {{/value}}
+    {{/serviceMethods}}
+}
+
+{{/services}}
+
+
+{{/root}}
