@@ -3,7 +3,7 @@ package aksharp
 import com.google.protobuf.Descriptors._
 import com.google.protobuf.{CodedInputStream, ExtensionRegistry}
 import com.google.protobuf.compiler.PluginProtos.{CodeGeneratorRequest, CodeGeneratorResponse}
-import aksharp.codegen.generators.{ExampleMain, ExampleTest, GrpcClient, ServicesImpl, client, mockclient, mocks, server}
+import aksharp.codegen.generators.{ExampleMain, ExampleTest, GrpcClient, MockServer, client, mockclient, mocks, server}
 import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 import scalapb.options.compiler.Scalapb
@@ -19,7 +19,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
 
   override def run(req: Array[Byte]): Array[Byte] = run(CodedInputStream.newInstance(req))
 
-  val engine: TemplateEngine = new TemplateEngine
+  implicit val engine: TemplateEngine = new TemplateEngine
 
   def run(input: CodedInputStream): Array[Byte] = {
     val registry = ExtensionRegistry.newInstance()
@@ -37,17 +37,17 @@ object Generator extends protocbridge.ProtocCodeGenerator {
                 acc + (fp.getName -> FileDescriptor.buildFrom(fp, deps.toArray))
             }
 
-          val implicits = new DescriptorImplicits(params, fileDescByName.values.toVector)
+          implicit val implicits = new DescriptorImplicits(params, fileDescByName.values.toVector)
 
           val defaultPort = 8080
 
-          val iclientGenerator = GrpcClient()(engine, implicits)
-          val serverGenerator = server(defaultPort)(engine, implicits)
-          val serviceMocksGenerator = mocks()(engine, implicits)
-          val mockclientGenerator = mockclient()(engine, implicits)
-          val servicesImplGenerator = ServicesImpl()(engine, implicits)
-          val exampleMainGenerator = ExampleMain()(engine, implicits)
-          val exampleTestGenerator = ExampleTest()(engine, implicits)
+          val iclientGenerator = GrpcClient()
+          val serverGenerator = server(defaultPort)
+          val serviceMocksGenerator = mocks()
+          val mockclientGenerator = mockclient()
+          val exampleMainGenerator = ExampleMain()
+          val exampleTestGenerator = ExampleTest()
+          val mockServerGenerator = MockServer()
           request.getFileToGenerateList.asScala.foreach {
             name =>
               val fileDesc = fileDescByName(name)
@@ -56,17 +56,17 @@ object Generator extends protocbridge.ProtocCodeGenerator {
               val localhostHostname = "localhost"
 
               b.addFile(
-                client(defaultPort, localhostHostname)(engine, implicits)
+                client(defaultPort, localhostHostname)
                   .generateFile(fileDesc)
               )
 
               b.addFile(iclientGenerator.generateFile(fileDesc))
               b.addFile(serverGenerator.generateFile(fileDesc))
-              b.addFile(servicesImplGenerator.generateFile(fileDesc))
               b.addFile(serviceMocksGenerator.generateFile(fileDesc))
               b.addFile(mockclientGenerator.generateFile(fileDesc))
               b.addFile(exampleMainGenerator.generateFile(fileDesc))
               b.addFile(exampleTestGenerator.generateFile(fileDesc))
+              b.addFile(mockServerGenerator.generateFile(fileDesc))
           }
           b.build.toByteArray
         }

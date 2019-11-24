@@ -1,12 +1,12 @@
 {{#root}}
-/*
+
 package {{javaPackage}}
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.global
 
-object Main extends App {
+object MockServer extends App {
 
     implicit val ec: ExecutionContext = global
 
@@ -22,13 +22,11 @@ object Main extends App {
 class {{serviceTypeName}}Service extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
 {{#methods}}
     override def {{methodName}}(req: {{methodInputType}}): Future[{{methodOutputType}}] = {
-        // TODO: implement me
-        // example (to return default empty type): Future.successful({{methodOutputType}}())
-        ???
+        Future.successful({{methodOutputType}}())
     }
 {{/methods}}
 }
 
 {{/serviceMethods}}
-*/
+
 {{/root}}
