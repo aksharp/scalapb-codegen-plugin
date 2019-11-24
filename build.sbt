@@ -42,6 +42,7 @@ lazy val e2e = (project in file("e2e"))
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.0.5",
       "org.scalacheck" %% "scalacheck" % "1.14.2",
+      "io.grpc" % "grpc-services" % "1.25.0",
       "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"

@@ -7,7 +7,7 @@ import {{serviceTypeName}}Grpc._
 
 import io.grpc.Server
 import io.grpc.netty.NettyServerBuilder
-
+import io.grpc.protobuf.services.ProtoReflectionService
 import scala.concurrent.ExecutionContext
 
 object server { self =>
@@ -25,6 +25,7 @@ object server { self =>
     {{#services}}
             .addService({{serviceTypeName}}Grpc.bindService({{serviceName}}, ec))
     {{/services}}
+            .addService(ProtoReflectionService.newInstance())
             .build
             .start
 
