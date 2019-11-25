@@ -1,5 +1,7 @@
 # Notes
-a) Generate ExamplePropertyTests 
+a) generate oneof mocks
+b) Generate Spec test without starting server 
+c) Generate ExamplePropertyTests 
 1) figure out how to configure host/port from sbt values
 2) do not forget the magic behind naming mustache templates and generator classes with same name, or overwrite the name property
 3) see how Kong handles gRPC interceptors, and how to wire up A/B test interceptor to codegen to dynamically redirect for diff variants
