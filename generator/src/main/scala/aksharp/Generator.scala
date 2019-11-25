@@ -41,13 +41,13 @@ object Generator extends protocbridge.ProtocCodeGenerator {
 
           val defaultPort = 8080
 
-          val iclientGenerator = GrpcClient()
-          val serverGenerator = server(defaultPort)
-          val serviceMocksGenerator = mocks()
-          val mockclientGenerator = mockclient()
-          val exampleMainGenerator = ExampleMain()
-          val exampleTestGenerator = ExampleTest()
-          val mockServerGenerator = MockServer()
+          val iclientGenerator = new GrpcClient()
+          val serverGenerator = new server(defaultPort)
+          val serviceMocksGenerator = new mocks()
+          val mockclientGenerator = new mockclient()
+          val exampleMainGenerator = new ExampleMain()
+          val exampleTestGenerator = new ExampleTest()
+          val mockServerGenerator = new MockServer()
           request.getFileToGenerateList.asScala.foreach {
             name =>
               val fileDesc = fileDescByName(name)
@@ -56,7 +56,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
               val localhostHostname = "localhost"
 
               b.addFile(
-                client(defaultPort, localhostHostname)
+                new client(defaultPort, localhostHostname)
                   .generateFile(fileDesc)
               )
 

@@ -7,7 +7,7 @@ import aksharp.codegen.util.MustacheTemplateBase
 import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 
-case class mockclient(implicit val engine: TemplateEngine,
+class mockclient(implicit val engine: TemplateEngine,
                       val descriptorImplicits: DescriptorImplicits
                      ) extends MustacheTemplateBase[mockclientData] {
   override def getTemplateData(fileDesc: Descriptors.FileDescriptor): mockclientData = {

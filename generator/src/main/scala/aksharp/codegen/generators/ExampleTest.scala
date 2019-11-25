@@ -7,7 +7,7 @@ import com.google.protobuf.Descriptors
 import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 
-case class ExampleTest(implicit val engine: TemplateEngine,
+class ExampleTest(implicit val engine: TemplateEngine,
                        val descriptorImplicits: DescriptorImplicits
                       ) extends MustacheTemplateBase[ExampleTestData] {
 

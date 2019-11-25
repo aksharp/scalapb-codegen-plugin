@@ -7,12 +7,12 @@ import aksharp.codegen.util.MustacheTemplateBase
 import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 
-case class client(
-                   port: Int,
-                   host: String
-                 )(implicit val engine: TemplateEngine,
-                   val descriptorImplicits: DescriptorImplicits
-                 ) extends MustacheTemplateBase[clientData] {
+class client(
+              port: Int,
+              host: String
+            )(implicit val engine: TemplateEngine,
+              val descriptorImplicits: DescriptorImplicits
+            ) extends MustacheTemplateBase[clientData] {
 
   override def getTemplateData(fileDesc: FileDescriptor): clientData = {
     clientData(

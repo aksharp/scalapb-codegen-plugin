@@ -7,7 +7,7 @@ import com.google.protobuf.Descriptors.FileDescriptor
 import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 
-case class server(
+class server(
                    port: Int
                  )(implicit val engine: TemplateEngine,
                    val descriptorImplicits: DescriptorImplicits

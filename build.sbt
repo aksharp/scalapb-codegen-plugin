@@ -1,4 +1,4 @@
-val Scala210 = "2.10.7"
+val Scala213 = "2.13.1"
 
 val Scala212 = "2.12.10"
 
@@ -7,7 +7,7 @@ ThisBuild / scalaVersion := Scala212
 lazy val generator = (project in file("generator"))
   .enablePlugins(AssemblyPlugin)
   .settings(
-    crossScalaVersions in ThisBuild := Seq(Scala212, Scala210),
+    crossScalaVersions in ThisBuild := Seq(Scala212, Scala213),
 
     organization := "aksharp",
 
@@ -40,7 +40,7 @@ def isWindows: Boolean = sys.props("os.name").startsWith("Windows")
 lazy val e2e = (project in file("e2e"))
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.5",
+      "org.scalatest" %% "scalatest" % "3.0.8",
       "org.scalacheck" %% "scalacheck" % "1.14.2",
       "io.grpc" % "grpc-services" % "1.25.0",
       "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,

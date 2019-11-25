@@ -7,7 +7,7 @@ import aksharp.codegen.util.MustacheTemplateBase
 import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 
-case class mocks(implicit val engine: TemplateEngine,
+class mocks(implicit val engine: TemplateEngine,
                  val descriptorImplicits: DescriptorImplicits
                   ) extends MustacheTemplateBase[mocksData] {
 
