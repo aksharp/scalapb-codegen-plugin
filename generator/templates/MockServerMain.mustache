@@ -6,11 +6,11 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.global
 
-object MockServer extends App {
+object MockServerMain extends App {
 
     implicit val ec: ExecutionContext = global
 
-    server.run(
+    mockserver.run(
         {{#servicesAsArguments}}
             {{#value}}{{serviceName}} = new {{serviceTypeName}}Service{{/value}}{{separator}}
         {{/servicesAsArguments}}

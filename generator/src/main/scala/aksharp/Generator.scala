@@ -3,7 +3,7 @@ package aksharp
 import com.google.protobuf.Descriptors._
 import com.google.protobuf.{CodedInputStream, ExtensionRegistry}
 import com.google.protobuf.compiler.PluginProtos.{CodeGeneratorRequest, CodeGeneratorResponse}
-import aksharp.codegen.generators.{ExampleMain, ExampleTest, GrpcClient, MockServer, client, mockclient, mocks, server}
+import aksharp.codegen.generators.{ExampleMain, ExampleTest, GrpcClient, MockServerMain, client, mockclient, mocks, mockserver, server}
 import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 import scalapb.options.compiler.Scalapb
@@ -47,7 +47,8 @@ object Generator extends protocbridge.ProtocCodeGenerator {
           val mockclientGenerator = new mockclient()
           val exampleMainGenerator = new ExampleMain()
           val exampleTestGenerator = new ExampleTest()
-          val mockServerGenerator = new MockServer()
+          val mockServerMainGenerator = new MockServerMain()
+          val mockserverGenerator = new mockserver()
           request.getFileToGenerateList.asScala.foreach {
             name =>
               val fileDesc = fileDescByName(name)
@@ -66,7 +67,8 @@ object Generator extends protocbridge.ProtocCodeGenerator {
               b.addFile(mockclientGenerator.generateFile(fileDesc))
               b.addFile(exampleMainGenerator.generateFile(fileDesc))
               b.addFile(exampleTestGenerator.generateFile(fileDesc))
-              b.addFile(mockServerGenerator.generateFile(fileDesc))
+              b.addFile(mockserverGenerator.generateFile(fileDesc))
+              b.addFile(mockServerMainGenerator.generateFile(fileDesc))
           }
           b.build.toByteArray
         }

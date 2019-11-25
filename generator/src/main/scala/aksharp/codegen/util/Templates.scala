@@ -54,7 +54,7 @@ object Templates {
       |{{/root}}
       |""".stripMargin
 
-  val mockServer: String =
+  val mockServerMain: String =
     """
       |{{#root}}
       |
@@ -64,11 +64,11 @@ object Templates {
       |import scala.concurrent.ExecutionContext
       |import scala.concurrent.ExecutionContext.global
       |
-      |object MockServer extends App {
+      |object MockServerMain extends App {
       |
       |    implicit val ec: ExecutionContext = global
       |
-      |    server.run(
+      |    mockserver.run(
       |        {{#servicesAsArguments}}
       |            {{#value}}{{serviceName}} = new {{serviceTypeName}}Service{{/value}}{{separator}}
       |        {{/servicesAsArguments}}
@@ -314,6 +314,56 @@ object Templates {
       |""".stripMargin
 
 
+  val mockserver =
+    """
+      |{{#root}}
+      |package {{javaPackage}}
+      |
+      |{{#services}}
+      |import {{serviceTypeName}}Grpc._
+      |{{/services}}
+      |
+      |import io.grpc.Server
+      |import io.grpc.netty.NettyServerBuilder
+      |import io.grpc.protobuf.services.ProtoReflectionService
+      |import scala.concurrent.ExecutionContext
+      |
+      |object mockserver { self =>
+      |    private[this] var s: Server = null
+      |    private val port = {{port}}
+      |
+      |    def run(
+      |{{#servicesAsArguments}}
+      |            {{#value}}{{serviceName}}: {{serviceTypeName}}Grpc.{{serviceTypeName}}{{/value}}{{separator}}
+      |{{/servicesAsArguments}}
+      |    )
+      |    (implicit ec: ExecutionContext): Unit = {
+      |        s = NettyServerBuilder
+      |            .forPort(port)
+      |    {{#services}}
+      |            .addService({{serviceTypeName}}Grpc.bindService({{serviceName}}, ec))
+      |    {{/services}}
+      |            .addService(ProtoReflectionService.newInstance())
+      |            .build
+      |            .start
+      |
+      |        System.out.println(s"*** running mock gRPC server on port $port")
+      |
+      |        sys.addShutdownHook {
+      |            System.err.println("*** shutting down mock gRPC server since JVM is shutting down")
+      |            self.stop()
+      |            System.err.println("*** mock server shut down")
+      |        }
+      |
+      |        s.awaitTermination()
+      |    }
+      |
+      |    def stop(): Unit = if (s != null) { s.shutdownNow() }
+      |
+      |}
+      |{{/root}}
+      |""".stripMargin
+
   private val m = Map(
     "client.mustache" -> client,
     "ExampleMain.mustache" -> exampleMain,
@@ -321,8 +371,9 @@ object Templates {
     "GrpcClient.mustache" -> grpcClient,
     "mockclient.mustache" -> mockclient,
     "mocks.mustache" -> mocks,
-    "MockServer.mustache" -> mockServer,
-    "server.mustache" -> server
+    "MockServerMain.mustache" -> mockServerMain,
+    "server.mustache" -> server,
+    "mockserver.mustache" -> mockserver
   )
 
 }
