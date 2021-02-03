@@ -16,6 +16,7 @@ option java_package = "aksharp.funWithNames";
 message Person {
     string name = 1;
     int32 age = 2;
+    string type = 3;
 }
 
 message PersonRequest {

@@ -27,7 +27,8 @@ class NicknameMockedSpec extends WordSpec with Matchers with Eventually {
           request = aksharp.funWithNames.mocks.aPersonRequest(
             person = aksharp.funWithNames.mocks.aPerson(
               name = "Alex",
-              age = 42
+              age = 42,
+              `type` = "father"
             ),
             suggestedNickname = "X"
           )

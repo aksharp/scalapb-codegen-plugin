@@ -10,6 +10,8 @@ import scala.util.{Failure, Success, Try}
 
 object DomainService {
 
+  val reservedFieldNames = List("type")
+
   def toServiceMethods(fileDesc: FileDescriptor): List[ServiceMethod] = {
     fileDesc
       .getServices
@@ -80,7 +82,7 @@ object DomainService {
           val fieldName = s"${field.getName.head.toLower}${field.getName.tail}"
 
           Field(
-            fieldName = fieldName,
+            fieldName = if (reservedFieldNames.contains(fieldName)) s"`$fieldName`" else fieldName,
             fieldTypeName = scalaType,
             fieldGenerator = toFieldGenerator(scalaType),
             fieldForExpressionGenerator = toFieldForExpressionGenerator(scalaType),

@@ -1,13 +1,17 @@
-val Scala213 = "2.13.1"
+val Scala213 = "2.13.4"
 
-val Scala212 = "2.12.10"
+val Scala212 = "2.12.12"
 
-ThisBuild / scalaVersion := Scala212
+//val Scala211 = "2.11.12"
+
+
+ThisBuild / scalaVersion := Scala213
+ThisBuild / version := "0.1.1-SNAPSHOT"
 
 lazy val generator = (project in file("generator"))
   .enablePlugins(AssemblyPlugin)
   .settings(
-    crossScalaVersions in ThisBuild := Seq(Scala212, Scala213),
+    crossScalaVersions in ThisBuild := Seq(Scala213, Scala212),
 
     organization := "aksharp",
 
@@ -15,7 +19,10 @@ lazy val generator = (project in file("generator"))
 
     libraryDependencies ++= Seq(
       "com.thesamet.scalapb" %% "compilerplugin" % scalapb.compiler.Version.scalapbVersion,
-      "org.scalatra.scalate" %% "scalate-core" % "1.9.5"
+      "org.scalatra.scalate" %% "scalate-core" % "1.9.6"
+//      "org.typelevel" %% "cats-core" % "2.3.1",
+//      "com.github.julien-truffaut" %% "monocle-core" % "2.1.0",
+//      "com.github.julien-truffaut" %% "monocle-macro" % "2.1.0"
     ),
 
     assemblyOption in assembly := (assemblyOption in assembly).value.copy(
@@ -41,8 +48,8 @@ lazy val e2e = (project in file("e2e"))
   .settings(
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.0.8",
-      "org.scalacheck" %% "scalacheck" % "1.14.2",
-      "io.grpc" % "grpc-services" % "1.25.0",
+      "org.scalacheck" %% "scalacheck" % "1.15.2",
+      "io.grpc" % "grpc-services" % "1.35.0",
       "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
