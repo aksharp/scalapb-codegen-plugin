@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option java_package = "com.tremorvideo.lib.api";
+
+import "scalapb/scalapb.proto";
+
+option (scalapb.options) = {
+  scope: FILE
+  flat_package: true
+  single_file: false
+  lenses: true
+  preserve_unknown_fields: false
+};
+
+message ObservableAndTraceableBase {
+    string serviceInstanceCorrelationId = 1;
+    string apiCallCorrelationId = 2;
+    int64 apiCallTimestamp = 3;
+}
+
+message ObservableAndTraceableWithPlacementId {
+    string serviceInstanceCorrelationId = 1;
+    string apiCallCorrelationId = 2;
+    int64 apiCallTimestamp = 3;
+    int64 placementId = 4;
+}
+
+// This is always the key for every topic
+message ObservableAndTraceable {
+    oneof sealed_value {
+        ObservableAndTraceableBase observableAndTraceableBase = 1;
+        ObservableAndTraceableWithPlacementId observableAndTraceableWithPlacementId = 2;
+    }
+}

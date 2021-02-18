@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "scalapb/scalapb.proto";
+import "ObservableAndTraceable.proto";
 
 option (scalapb.options) = {
   scope: FILE
@@ -29,9 +30,10 @@ message Placement {
 }
 
 message BidRequestBase {
-    int64 id = 1;
-    UserData userData = 2;
-    repeated Placement placements = 3;
+    ObservableAndTraceable observableAndTraceable = 1;
+    int64 id = 2;
+    UserData userData = 3;
+    repeated Placement placements = 4;
 }
 
 message BidRequestWithCorrelationId {

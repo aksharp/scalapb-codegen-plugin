@@ -94,10 +94,15 @@ object DomainService {
     if (field.getJavaType == JavaType.MESSAGE) {
       if (field.isRepeated)
         s"Seq($fieldName)"
-      else if (field.isOptional)
-        s"Option($fieldName)"
-      else
-        fieldName
+      else {
+        val isOneOf: Boolean = field.getMessageType.getRealOneofs != null && field.getMessageType.getRealOneofs.asScala.map(_.getName).toList.nonEmpty
+        if (isOneOf)
+          fieldName
+        else if (field.isOptional)
+          s"Option($fieldName)"
+        else
+          fieldName
+      }
     } else {
       fieldName
     }
@@ -158,6 +163,16 @@ object DomainService {
     }
   }
 
+  def toImports(fileDesc: FileDescriptor): List[ImportExt] = {
+    fileDesc
+      .getDependencies.asScala
+      .map(d =>
+        ImportExt(
+          fqdnImport = d.getOptions.getJavaPackage
+        )
+      )
+      .toList
+  }
 
   def toServicesExt(fileDesc: FileDescriptor): List[ServiceExt] = {
     fileDesc

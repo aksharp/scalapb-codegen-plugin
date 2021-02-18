@@ -99,7 +99,9 @@ object Templates {
       |
       |    import {{javaPackage}}._
       |    import org.scalacheck.Gen
-      |
+      |    {{#imports}}
+      |    import {{fqdnImport}}._
+      |    {{/imports}}
       |    import scala.concurrent.Future
       |
       |
