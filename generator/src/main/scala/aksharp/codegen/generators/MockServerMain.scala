@@ -17,7 +17,7 @@ class MockServerMain(implicit val engine: TemplateEngine,
       basePackageName = fileDesc.getPackage,
       javaPackage = fileDesc.getOptions.getJavaPackage,
       serviceMethods = DomainService.toServiceMethods(fileDesc),
-      servicesAsArguments = DomainService.toServicesAsArguments(services)
+      servicesAsArguments = DomainService.withSeparator(services)
     )
   }
 

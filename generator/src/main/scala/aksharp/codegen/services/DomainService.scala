@@ -194,11 +194,6 @@ object DomainService {
                                separator: String
                              )
 
-  //TODO: just go directly to withSeparator
-  def toServicesAsArguments(services: List[Service]): List[WithSeparator[Service]] = {
-    withSeparator(services)
-  }
-
   def withSeparator[A](
                         list: List[A],
                         separator: String = ","

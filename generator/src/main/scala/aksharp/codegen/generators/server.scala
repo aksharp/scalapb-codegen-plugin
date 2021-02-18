@@ -20,7 +20,7 @@ class server(
       basePackageName = fileDesc.getPackage,
       javaPackage = fileDesc.getOptions.getJavaPackage,
       services = services,
-      servicesAsArguments = DomainService.toServicesAsArguments(services)
+      servicesAsArguments = DomainService.withSeparator(services)
     )
   }
 
