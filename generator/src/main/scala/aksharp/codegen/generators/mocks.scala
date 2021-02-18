@@ -50,7 +50,7 @@ class mocks(
     mocksData(
       javaPackage = fileDesc.getOptions.getJavaPackage,
       services = services,
-      messages = services.flatMap(serviceExt => updateFieldNames(serviceExt.messages)).distinct
+      allMessages = services.flatMap(serviceExt => updateFieldNames(serviceExt.messages)).distinct
     )
   }
 }

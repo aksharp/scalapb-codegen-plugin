@@ -105,6 +105,7 @@ object Templates {
       |    // Stubs
       |
       |    {{#messages}}
+      |
       |        object a{{messageTypeName}} {
       |
       |        def apply(
@@ -121,6 +122,28 @@ object Templates {
       |
       |        }
       |    {{/messages}}
+      |
+      |    {{#messagesWithOneOf}}
+      |
+      |        // OneOffMessage
+      |        object a{{messageTypeName}} {
+      |
+      |        def apply(
+      |        {{#fields}}
+      |            {{#value}}{{fieldName}}: {{fieldTypeName}} = {{fieldGenerator}}{{/value}}{{separator}}
+      |        {{/fields}}
+      |        ): {{messageTypeName}} = {
+      |           Gen.oneOf(
+      |             {{#fields}}
+      |                 {{#value}}
+      |                      {{fieldName}}{{separator}}
+      |                  {{/value}}
+      |              {{/fields}}
+      |           ).sample.get
+      |        }
+      |
+      |        }
+      |    {{/messagesWithOneOf}}
       |
       |
       |    // Generators
@@ -145,6 +168,28 @@ object Templates {
       |        }
       |        }
       |    {{/messages}}
+      |
+      |    {{#messagesWithOneOf}}
+      |        object {{messageTypeName}}Gen {
+      |        def apply(): Gen[{{messageTypeName}}] =
+      |        for {
+      |        {{#fields}}
+      |            {{#value}}
+      |                {{fieldName}} <- {{fieldForExpressionGenerator}}
+      |            {{/value}}
+      |        {{/fields}}
+      |        oneOf <- Gen.oneOf(
+      |                   {{#fields}}
+      |                     {{#value}}
+      |                         {{fieldName}}{{separator}}
+      |                     {{/value}}
+      |                   {{/fields}}
+      |                 )
+      |        } yield {
+      |         oneOf
+      |        }
+      |        }
+      |    {{/messagesWithOneOf}}
       |
       |    {{#services}}
       |        case class {{serviceTypeName}}Mock(

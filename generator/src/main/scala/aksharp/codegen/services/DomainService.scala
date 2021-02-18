@@ -1,12 +1,11 @@
 package aksharp.codegen.services
 
+import aksharp.codegen.domain._
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.JavaType
 import com.google.protobuf.Descriptors.{FieldDescriptor, FileDescriptor}
-import aksharp.codegen.domain.{Field, Message, Method, Service, ServiceExt, ServiceMethod}
 
-import scala.collection.JavaConverters._
-import scala.util.{Failure, Success, Try}
+import scala.jdk.CollectionConverters._
 
 object DomainService {
 
@@ -26,44 +25,34 @@ object DomainService {
       }
   }
 
-
-  //  def toMethods(
-  //                 serviceTypeName: String,
-  //                 fileDesc: FileDescriptor
-  //               ): List[Method] = {
-  //    fileDesc
-  //      .getServices
-  //      .asScala
-  //      .find(_.getName == serviceTypeName)
-  //      .map(_.getMethods.asScala.map(m => Method(
-  //        methodName = s"${m.getName.head.toLower}${m.getName.tail}",
-  //        inputType = m.getInputType.getName,
-  //        outputType = m.getOutputType.getName
-  //      )).toList).getOrElse(List.empty)
-  //  }
-
   def toMethods(service: Descriptors.ServiceDescriptor): List[Method] = {
     service
       .getMethods
       .asScala
-      .map(m => Method(
-        methodName = s"${m.getName.head.toLower}${m.getName.tail}",
-        methodInputType = m.getInputType.getName,
-        methodOutputType = m.getOutputType.getName
-      )).toList
+      .map(
+        m => Method(
+          methodName = s"${m.getName.head.toLower}${m.getName.tail}",
+          methodInputType = m.getInputType.getName,
+          methodOutputType = m.getOutputType.getName
+        )
+      ).toList
   }
 
   def toMessages(service: Descriptors.ServiceDescriptor): List[Message] = {
     service
       .getMethods
       .asScala
-      .flatMap(method =>
-        List(method.getInputType, method.getOutputType)
-          .flatMap(toMessageR))
+      .flatMap(
+        method =>
+          List(method.getInputType, method.getOutputType)
+            .flatMap(toMessageR)
+      )
       .toList
   }
 
   def toMessageR(message: Descriptors.Descriptor): Set[Message] = {
+    val isOneOffMessage = message.getRealOneofs != null && message.getRealOneofs.asScala.nonEmpty
+
     val innerMessage: Set[Message] =
       message
         .getFields
@@ -77,22 +66,25 @@ object DomainService {
       message
         .getFields
         .asScala
-        .map(field => {
-          val scalaType = toScalaType(field)
-          val fieldName = s"${field.getName.head.toLower}${field.getName.tail}"
+        .map(
+          field => {
+            val scalaType = toScalaType(field)
+            val fieldName = s"${field.getName.head.toLower}${field.getName.tail}"
 
-          Field(
-            fieldName = if (reservedFieldNames.contains(fieldName)) s"`$fieldName`" else fieldName,
-            fieldTypeName = scalaType,
-            fieldGenerator = toFieldGenerator(scalaType),
-            fieldForExpressionGenerator = toFieldForExpressionGenerator(scalaType),
-            fieldNameOrOptionalOrSeq = toFieldNameForAssignment(field)
-          )
-        }).toList
+            Field(
+              fieldName = if (reservedFieldNames.contains(fieldName)) s"`$fieldName`" else fieldName,
+              fieldTypeName = scalaType,
+              fieldGenerator = toFieldGenerator(scalaType),
+              fieldForExpressionGenerator = toFieldForExpressionGenerator(scalaType),
+              fieldNameOrOptionalOrSeq = toFieldNameForAssignment(field)
+            )
+          }
+        ).toList
 
     innerMessage + Message(
       messageTypeName = message.getName,
-      fields = withSeparator(fields)
+      fields = withSeparator(fields),
+      isOneOf = isOneOffMessage
     )
 
   }
@@ -197,26 +189,20 @@ object DomainService {
       }
   }
 
+  case class WithSeparator[A](
+                               value: A,
+                               separator: String
+                             )
 
-  //  abstract class Separated[A] {
-  //    val value: A
-  //    val separator: String
-  //  }
-  //  case class ValueWithSeparator[A](value: A, separator: String = ",") extends Separated[A]
-  //  case class ValueWithoutSeparator[A](value: A) extends Separated[A] { val separator: String = "" }
-  //
-  case class WithSeparator[A](value: A, separator: String)
-
+  //TODO: just go directly to withSeparator
   def toServicesAsArguments(services: List[Service]): List[WithSeparator[Service]] = {
     withSeparator(services)
-    //    services match {
-    //      case Nil => Nil
-    //      case head :: Nil => List(WithSeparator(head, ""))
-    //      case other => other.init.map(s => WithSeparator(s, ",")) :+ WithSeparator(other.last, "")
-    //    }
   }
 
-  def withSeparator[A](list: List[A], separator: String = ","): List[WithSeparator[A]] = {
+  def withSeparator[A](
+                        list: List[A],
+                        separator: String = ","
+                      ): List[WithSeparator[A]] = {
     list match {
       case Nil => Nil
       case head :: Nil => List(WithSeparator(head, ""))

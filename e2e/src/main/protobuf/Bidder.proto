@@ -28,10 +28,24 @@ message Placement {
     Pacing pacing = 2;
 }
 
-message BidRequest {
+message BidRequestBase {
     int64 id = 1;
     UserData userData = 2;
     repeated Placement placements = 3;
+}
+
+message BidRequestWithCorrelationId {
+    int64 id = 1;
+    UserData userData = 2;
+    repeated Placement placements = 3;
+    int64 correlationId = 4;
+}
+
+message BidRequest {
+    oneof sealed_value {
+        BidRequestBase bidRequestBase = 1;
+        BidRequestWithCorrelationId bidRequestWithCorrelationId = 2;
+    }
 }
 
 message BidResponse {
