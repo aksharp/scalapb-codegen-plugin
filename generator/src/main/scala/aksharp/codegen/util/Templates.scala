@@ -60,6 +60,7 @@ object Templates {
       |
       |package {{javaPackage}}
       |
+      |import {{javaPackage}}.mocks._
       |import scala.concurrent.Future
       |import scala.concurrent.ExecutionContext
       |import scala.concurrent.ExecutionContext.global
@@ -80,7 +81,7 @@ object Templates {
       |class {{serviceTypeName}}Service extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
       |{{#methods}}
       |    override def {{methodName}}(req: {{methodInputType}}): Future[{{methodOutputType}}] = {
-      |        Future.successful({{methodOutputType}}())
+      |        Future.successful(a{{methodOutputType}}())
       |    }
       |{{/methods}}
       |}

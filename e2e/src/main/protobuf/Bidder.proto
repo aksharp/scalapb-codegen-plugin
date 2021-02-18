@@ -53,7 +53,18 @@ message BidResponse {
     double bidPrice = 2;
 }
 
+message NoBidResponse {
+    string message = 1;
+}
+
+message BidOrNoBidResponse {
+    oneof sealed_value {
+        BidResponse bidResponse = 1;
+        NoBidResponse noBidResponse = 2;
+    }
+}
+
 service Bidder {
-    rpc Bid (BidRequest) returns (BidResponse) {
+    rpc Bid (BidRequest) returns (BidOrNoBidResponse) {
     }
 }

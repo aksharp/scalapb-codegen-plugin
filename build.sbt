@@ -6,7 +6,7 @@ val Scala212 = "2.12.12"
 
 
 ThisBuild / scalaVersion := Scala213
-ThisBuild / version := "0.1.1-SNAPSHOT"
+ThisBuild / version := "0.1.2-SNAPSHOT"
 
 lazy val generator = (project in file("generator"))
   .enablePlugins(AssemblyPlugin)
