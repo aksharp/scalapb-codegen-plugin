@@ -211,6 +211,15 @@ object Templates {
       |
       |    {{/services}}
       |
+      |    // Arbitraries
+      |
+      |    {{#messages}}
+      |      implicit val arb{{messageTypeName}}: Arbitrary[{{messageTypeName}}] = Arbitrary({{messageTypeName}}Gen())
+      |    {{/messages}}
+      |
+      |    {{#messagesWithOneOf}}
+      |      implicit val arb{{messageTypeName}}: Arbitrary[{{messageTypeName}}] = Arbitrary({{messageTypeName}}Gen())
+      |    {{/messagesWithOneOf}}
       |
       |{{/root}}
       |""".stripMargin
