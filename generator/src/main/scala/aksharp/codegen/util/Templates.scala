@@ -20,12 +20,14 @@ object Templates {
       |
       |object server { self =>
       |    private[this] var s: Server = null
-      |    private val port = {{port}}
       |
       |    def run(
+      |        port: Int = {{port}},
+      |        awaitTermination: Boolean = false, // true if grpc server is the only entry point in your app
       |{{#servicesAsArguments}}
       |            {{#value}}{{serviceName}}: {{serviceTypeName}}Grpc.{{serviceTypeName}}{{/value}}{{separator}}
       |{{/servicesAsArguments}}
+      |
       |    )
       |    (implicit ec: ExecutionContext): Unit = {
       |        s = NettyServerBuilder
@@ -45,7 +47,7 @@ object Templates {
       |            System.err.println("*** server shut down")
       |        }
       |
-      |        s.awaitTermination()
+      |        if (awaitTermination) s.awaitTermination()
       |    }
       |
       |    def stop(): Unit = if (s != null) { s.shutdownNow() }
@@ -57,7 +59,7 @@ object Templates {
   val mockServerMain: String =
     """
       |{{#root}}
-      |
+      |/*
       |package {{javaPackage}}
       |
       |import {{javaPackage}}.mocks._
@@ -87,7 +89,7 @@ object Templates {
       |}
       |
       |{{/serviceMethods}}
-      |
+      |*/
       |{{/root}}
       |""".stripMargin
 
