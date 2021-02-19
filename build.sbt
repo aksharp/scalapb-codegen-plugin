@@ -7,6 +7,7 @@ val Scala212 = "2.12.12"
 
 ThisBuild / scalaVersion := Scala213
 ThisBuild / version := "0.1.2-SNAPSHOT"
+ThisBuild / organization := "aksharp"
 
 lazy val generator = (project in file("generator"))
   .enablePlugins(AssemblyPlugin)
@@ -77,3 +78,17 @@ lazy val e2e = (project in file("e2e"))
     ),
 
   )
+
+resolvers ++= Seq(
+  ("Artifactory Releases" at "http://artifactory.service.iad1.consul:8081/artifactory/libs-release/").withAllowInsecureProtocol(true),
+  ("Artifactory Snapshots" at "http://artifactory.service.iad1.consul:8081/artifactory/libs-snapshot/").withAllowInsecureProtocol(true)
+)
+
+publishTo := {
+  val artifactory = "http://artifactory.service.iad1.consul:8081/artifactory/"
+  val (name, url) = if (version.value.contains("-SNAPSHOT"))
+    ("sbt-plugin-snapshots", artifactory + "libs-snapshot")
+  else
+    ("sbt-plugin-releases", artifactory + "libs-release")
+  Some(Resolver.url(name, new URL(url)).withAllowInsecureProtocol(true))
+}
