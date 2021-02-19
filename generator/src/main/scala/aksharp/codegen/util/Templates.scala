@@ -100,7 +100,7 @@ object Templates {
       |    package {{javaPackage}}.mocks
       |
       |    import {{javaPackage}}._
-      |    import org.scalacheck.Gen
+      |    import org.scalacheck.{Arbitrary, Gen}
       |    {{#imports}}
       |    import {{fqdnImport}}._
       |    {{/imports}}
@@ -213,6 +213,7 @@ object Templates {
       |
       |    // Arbitraries
       |
+      |    object Arbitraries {
       |    {{#messages}}
       |      implicit val arb{{messageTypeName}}: Arbitrary[{{messageTypeName}}] = Arbitrary({{messageTypeName}}Gen())
       |    {{/messages}}
@@ -220,6 +221,7 @@ object Templates {
       |    {{#messagesWithOneOf}}
       |      implicit val arb{{messageTypeName}}: Arbitrary[{{messageTypeName}}] = Arbitrary({{messageTypeName}}Gen())
       |    {{/messagesWithOneOf}}
+      |    }
       |
       |{{/root}}
       |""".stripMargin
