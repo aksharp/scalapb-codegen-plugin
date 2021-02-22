@@ -28,7 +28,7 @@ In the other project, add the following to `project/plugins.sbt`:
 ```
 addSbtPlugin("com.thesamet" % "sbt-protoc" % "0.99.27")
 
-libraryDependencies += "aksharp" %% "scalapb-grpc-client-server-mocks-codegen-plugin" % "0.1.0"
+libraryDependencies += "aksharp" %% "scalapb-codegen-plugin" % "0.1.2-SNAPSHOT"
 ```
 
 and the following to your `build.sbt`:
