@@ -9,7 +9,7 @@ c) Generate ExamplePropertyTests
 5) (separate effort but needed) how to download only those proto files that we care about and of specific version automatically, including latest version capability
 6) TLS over gRPC
 
-# scalapb-grpc-client-server-mocks-codegen-plugin
+# scalapb-codegen-plugin
 
 A Protoc plugin that generates...
 
