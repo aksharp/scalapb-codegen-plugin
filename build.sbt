@@ -10,7 +10,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 resolvers += Resolver.sonatypeRepo("releases")
 
 ThisBuild / scalaVersion := Scala213
-ThisBuild / version := "0.2.0"
+ThisBuild / version := "0.2.1-SNAPSHOT"
 ThisBuild / organization := "io.github.aksharp"
 
 lazy val generator = (project in file("generator"))
@@ -86,7 +86,7 @@ lazy val e2e = (project in file("e2e"))
 usePgpKeyHex("59934C580565D7C358C3AB8C62DD7D28B3D79883")
 
 ThisBuild / organization := "io.github.aksharp"
-ThisBuild / organizationName := "aksharp"
+ThisBuild / organizationName := "io.github.aksharp"
 ThisBuild / organizationHomepage := Some(url("http://github.com/aksharp"))
 
 ThisBuild / scmInfo := Some(
