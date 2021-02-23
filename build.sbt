@@ -10,7 +10,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 resolvers += Resolver.sonatypeRepo("releases")
 
 ThisBuild / scalaVersion := Scala213
-ThisBuild / version := "0.2.0-SNAPSHOT"
+ThisBuild / version := "0.2.0"
 ThisBuild / organization := "io.github.aksharp"
 
 lazy val generator = (project in file("generator"))
