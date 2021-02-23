@@ -244,7 +244,8 @@ object Templates {
       |{{/root}}
       |""".stripMargin
 
-  val grpcClient: String = """{{#root}}
+  val grpcClient: String =
+    """{{#root}}
       package {{javaPackage}}
 
       {{#services}}
@@ -342,6 +343,76 @@ object Templates {
       |{{/root}}
       |""".stripMargin
 
+  val services: String =
+    """
+      |{{#root}}
+      |
+      |package {{javaPackage}}.services
+      |
+      |import cats.data.EitherT
+      |import {{javaPackage}}._
+      |//import {{javaPackage}}.config.AppConfig
+      |//import {{javaPackage}}.feature.flags.GreetFeatureFlags
+      |import com.tremorvideo.lib.api.ObservableAndTraceable
+      |import com.tremorvideo.lib.api.fp.util.ObservableAndTraceableService
+      |import monix.eval.Task
+      |import monix.execution.Scheduler
+      |import io.github.aksharp.tc._
+      |import scala.concurrent.Future
+      |
+      |
+      |
+      |
+      |{{#serviceMethods}}
+      |{{#methods}}
+      |class {{serviceTypeName}}{{methodInputType}}{{methodOutputType}}Service(
+      |                      {{methodInputType}}Validator: Validator[Task, {{methodInputType}}, {{methodOutputType}}],
+      |                      {{methodInputType}}Processor: Processor[Task, {{methodName}}FeatureFlags, {{methodInputType}}, {{methodOutputType}}]
+      |                    ) extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
+      |
+      |
+      |  override def {{methodName}}(req: {{methodInputType}})
+      |           (implicit s: Scheduler): Future[{{methodOutputType}}] = {
+      |    implicit val ot: ObservableAndTraceable = req.observableAndTraceable
+      |
+      |    (for {
+      |      finalResponse <- {{methodName}}FeatureFlags.runAndObserve(
+      |        action = validateAndProcess,
+      |        input = req
+      |      )
+      |    } yield {
+      |      finalResponse
+      |    }).runToFuture(s)
+      |  }
+      |
+      |  private def validateAndProcess(
+      |                                  {{methodName}}FeatureFlags: {{methodName}}FeatureFlags,
+      |                                  input: {{methodInputType}}
+      |                                ): Task[{{methodOutputType}}] = {
+      |    (for {
+      |      validatedRequest <- EitherT[Task, {{methodOutputType}}, {{methodInputType}}](
+      |        {{methodInputType}}Validator.validate(
+      |          item = input
+      |        )
+      |      )
+      |      response <- EitherT.liftF[Task, {{methodOutputType}}, {{methodOutputType}}](
+      |        {{methodInputType}}Processor.process(
+      |          featureFlags = {{methodName}}FeatureFlags,
+      |          validatedRequest = validatedRequest
+      |        )
+      |      )
+      |    } yield {
+      |      response
+      |    }).value.map(_.merge)
+      |  }
+      |
+      |}
+      |{{/methods}}
+      |{{/serviceMethods}}
+      |
+      |{{/root}}
+      """.stripMargin
+
   val client: String =
     """
       |{{#root}}
@@ -425,9 +496,11 @@ object Templates {
       |{{/root}}
       |""".stripMargin
 
+
   private val m = Map(
     "client.mustache" -> client,
     "ExampleMain.mustache" -> exampleMain,
+    "services.mustache" -> services,
     "ExampleTest.mustache" -> exampleTest,
     "GrpcClient.mustache" -> grpcClient,
     "mockclient.mustache" -> mockclient,

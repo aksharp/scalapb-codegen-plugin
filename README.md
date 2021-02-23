@@ -1,13 +1,8 @@
 # Notes
-a) generate oneof mocks
-b) Generate Spec test without starting server 
-c) Generate ExamplePropertyTests 
-1) figure out how to configure host/port from sbt values
-2) do not forget the magic behind naming mustache templates and generator classes with same name, or overwrite the name property
-3) see how Kong handles gRPC interceptors, and how to wire up A/B test interceptor to codegen to dynamically redirect for diff variants
-4) have a better story for updating codegen, without erasing code
-5) (separate effort but needed) how to download only those proto files that we care about and of specific version automatically, including latest version capability
-6) TLS over gRPC
+
+1) do not forget the magic behind naming mustache templates and generator classes with same name, or overwrite the name property
+2) have a good story for updating / upgrading
+3) TLS over gRPC
 
 # scalapb-grpc-client-server-mocks-codegen-plugin
 
