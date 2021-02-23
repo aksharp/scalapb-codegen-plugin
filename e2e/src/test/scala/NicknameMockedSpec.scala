@@ -1,6 +1,4 @@
 
-import aksharp.funWithNames.mocks.GenerateNicknameMock
-import aksharp.funWithNames.{PersonReply, PersonRequest}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{Matchers, WordSpec}
 

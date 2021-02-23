@@ -31,7 +31,7 @@ lazy val generator = (project in file("generator"))
       baseDirectory.value / "templates"
     },
 
-    Compile / mainClass := Some("aksharp.Main")
+    Compile / mainClass := Some("io.github.aksharp.codegen.Main")
 //
 //    resourceDirectory in Compile := file(".") / "./generator/src/main/scala/templates",
 //    resourceDirectory in Runtime := file(".") / "./generator/src/main/scala/templates"
@@ -45,6 +45,7 @@ def isWindows: Boolean = sys.props("os.name").startsWith("Windows")
 lazy val e2e = (project in file("e2e"))
   .settings(
     libraryDependencies ++= Seq(
+      "io.github.aksharp" %% "scala-type-classes" % "0.1.5",
       "org.scalatest" %% "scalatest" % "3.0.8",
       "org.scalacheck" %% "scalacheck" % "1.15.2",
       "io.grpc" % "grpc-services" % "1.35.0",
@@ -75,20 +76,6 @@ lazy val e2e = (project in file("e2e"))
     ),
 
   )
-
-resolvers ++= Seq(
-  ("Artifactory Releases" at "http://artifactory.service.iad1.consul:8081/artifactory/libs-release/").withAllowInsecureProtocol(true),
-  ("Artifactory Snapshots" at "http://artifactory.service.iad1.consul:8081/artifactory/libs-snapshot/").withAllowInsecureProtocol(true)
-)
-//
-//publishTo := {
-//  val artifactory = "http://artifactory.service.iad1.consul:8081/artifactory/"
-//  val (name, url) = if (version.value.contains("-SNAPSHOT"))
-//    ("sbt-plugin-snapshots", artifactory + "libs-snapshot")
-//  else
-//    ("sbt-plugin-releases", artifactory + "libs-release")
-//  Some(Resolver.url(name, new URL(url)).withAllowInsecureProtocol(true))
-//}
 
 // publish
 

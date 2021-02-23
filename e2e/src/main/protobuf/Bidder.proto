@@ -10,9 +10,9 @@ option (scalapb.options) = {
   lenses: true
 };
 
-package aksharp.grpc;
+package io.github.aksharp.codegen.example.grpc;
 
-option java_package = "aksharp.bidder";
+option java_package = "io.github.aksharp.codegen.example.bidder";
 
 message UserData {
     int32 age = 1;

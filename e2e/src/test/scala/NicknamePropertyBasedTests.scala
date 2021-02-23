@@ -1,6 +1,4 @@
 
-import aksharp.funWithNames.{Person, PersonReply, PersonRequest}
-import aksharp.funWithNames.mocks.{GenerateNicknameMock, PersonGen}
 import org.scalacheck.Prop.forAll
 import org.scalacheck.{Gen, Properties}
 
