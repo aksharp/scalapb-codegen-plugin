@@ -1,9 +1,13 @@
+import sbt.Resolver
+
 val Scala213 = "2.13.4"
 
 val Scala212 = "2.12.12"
 
 //val Scala211 = "2.11.12"
 
+resolvers += Resolver.sonatypeRepo("snapshots")
+resolvers += Resolver.sonatypeRepo("releases")
 
 ThisBuild / scalaVersion := Scala213
 ThisBuild / version := "0.2.0-SNAPSHOT"
