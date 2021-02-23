@@ -26,9 +26,9 @@ To add the plugin to another project, you need publish it first on maven, or pub
 In the other project, add the following to `project/plugins.sbt`:
 
 ```
-addSbtPlugin("com.thesamet" % "sbt-protoc" % "0.99.27")
+addSbtPlugin("com.thesamet" % "sbt-protoc" % "1.0.0")
 
-libraryDependencies += "aksharp" %% "scalapb-codegen-plugin" % "0.1.2-SNAPSHOT"
+libraryDependencies += "io.github.aksharp" %% "scalapb-codegen-plugin" % "0.2.0-SNAPSHOT"
 ```
 
 and the following to your `build.sbt`:

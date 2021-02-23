@@ -6,24 +6,21 @@ val Scala212 = "2.12.12"
 
 
 ThisBuild / scalaVersion := Scala213
-ThisBuild / version := "0.1.2-SNAPSHOT"
-ThisBuild / organization := "aksharp"
+ThisBuild / version := "0.2.0-SNAPSHOT"
+ThisBuild / organization := "io.github.aksharp"
 
 lazy val generator = (project in file("generator"))
   .enablePlugins(AssemblyPlugin)
   .settings(
     crossScalaVersions in ThisBuild := Seq(Scala213, Scala212),
 
-    organization := "aksharp",
+    organization := "io.github.aksharp",
 
-    name := "scalapb-grpc-client-server-mocks-codegen-plugin",
+    name := "scalapb-codegen-plugin",
 
     libraryDependencies ++= Seq(
       "com.thesamet.scalapb" %% "compilerplugin" % scalapb.compiler.Version.scalapbVersion,
       "org.scalatra.scalate" %% "scalate-core" % "1.9.6"
-//      "org.typelevel" %% "cats-core" % "2.3.1",
-//      "com.github.julien-truffaut" %% "monocle-core" % "2.1.0",
-//      "com.github.julien-truffaut" %% "monocle-macro" % "2.1.0"
     ),
 
     assemblyOption in assembly := (assemblyOption in assembly).value.copy(
@@ -69,8 +66,8 @@ lazy val e2e = (project in file("e2e"))
       // Creates a target using the assembled
       protocbridge.Target(
         generator = PB.gens.plugin(
-          "scalapb-grpc-client-server-mocks-codegen-plugin",
-          (generator / assembly / target).value / "scalapb-grpc-client-server-mocks-codegen-plugin-assembly-" + version.value + ".jar"
+          "scalapb-codegen-plugin",
+          (generator / assembly / target).value / "scalapb-codegen-plugin-assembly-" + version.value + ".jar"
         ),
         outputPath = (Compile / sourceManaged).value,
         options = Seq("grpc", "java_conversions")
@@ -83,12 +80,48 @@ resolvers ++= Seq(
   ("Artifactory Releases" at "http://artifactory.service.iad1.consul:8081/artifactory/libs-release/").withAllowInsecureProtocol(true),
   ("Artifactory Snapshots" at "http://artifactory.service.iad1.consul:8081/artifactory/libs-snapshot/").withAllowInsecureProtocol(true)
 )
+//
+//publishTo := {
+//  val artifactory = "http://artifactory.service.iad1.consul:8081/artifactory/"
+//  val (name, url) = if (version.value.contains("-SNAPSHOT"))
+//    ("sbt-plugin-snapshots", artifactory + "libs-snapshot")
+//  else
+//    ("sbt-plugin-releases", artifactory + "libs-release")
+//  Some(Resolver.url(name, new URL(url)).withAllowInsecureProtocol(true))
+//}
 
-publishTo := {
-  val artifactory = "http://artifactory.service.iad1.consul:8081/artifactory/"
-  val (name, url) = if (version.value.contains("-SNAPSHOT"))
-    ("sbt-plugin-snapshots", artifactory + "libs-snapshot")
-  else
-    ("sbt-plugin-releases", artifactory + "libs-release")
-  Some(Resolver.url(name, new URL(url)).withAllowInsecureProtocol(true))
+// publish
+
+usePgpKeyHex("59934C580565D7C358C3AB8C62DD7D28B3D79883")
+
+ThisBuild / organization := "io.github.aksharp"
+ThisBuild / organizationName := "aksharp"
+ThisBuild / organizationHomepage := Some(url("http://github.com/aksharp"))
+
+ThisBuild / scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/aksharp/scalapb-codegen-plugin"),
+    "scm:git@github.com:aksharp/scalapb-codegen-plugin.git"
+  )
+)
+ThisBuild / developers := List(
+  Developer(
+    id    = "aksharp",
+    name  = "Alexander Khotyanov",
+    email = "alex@khotyanov.com",
+    url   = url("https://github.com/aksharp")
+  )
+)
+
+ThisBuild / description := "ScalaPB CodeGen Plugin."
+ThisBuild / licenses := List("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
+ThisBuild / homepage := Some(url("https://github.com/aksharp/scalapb-codegen-plugin"))
+
+// Remove all additional repository other than Maven Central from POM
+ThisBuild / pomIncludeRepository := { _ => false }
+ThisBuild / publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
+  else Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
+ThisBuild / publishMavenStyle := true
