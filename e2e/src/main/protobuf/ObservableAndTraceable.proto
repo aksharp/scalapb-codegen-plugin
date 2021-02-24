@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-option java_package = "com.tremorvideo.lib.api";
-
 import "scalapb/scalapb.proto";
 
 option (scalapb.options) = {
@@ -11,6 +9,8 @@ option (scalapb.options) = {
   lenses: true
   preserve_unknown_fields: false
 };
+
+package com.tremorvideo.lib.api;
 
 message ObservableAndTraceableBase {
     string serviceInstanceCorrelationId = 1;

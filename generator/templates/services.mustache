@@ -1,0 +1,63 @@
+{{#root}}
+    package {{javaPackage}}.services
+
+    import cats.data.EitherT
+    import {{javaPackage}}._
+    import {{javaPackage}}.config.AppConfig
+    import {{javaPackage}}.feature.flags.GreetFeatureFlags
+    import com.tremorvideo.lib.api.ObservableAndTraceable
+    import com.tremorvideo.lib.api.fp.util.ObservableAndTraceableService
+    import {{javaPackage}}.processors.Processor
+    import {{javaPackage}}.validators.Validator
+    import monix.eval.Task
+    import monix.execution.Scheduler.global
+    import io.github.aksharp.tc._
+
+    import scala.concurrent.Future
+
+
+
+
+    {{#serviceMethods}}
+        class {{serviceTypeName}}Service(
+        {{methodInputType}}Validator: Validator[Task, {{methodInputType}}, {{methodOutputType}}],
+        {{methodInputType}}Processor: Processor[Task, {{methodName}}FeatureFlags, {{methodInputType}}, {{methodOutputType}}]
+        ) extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
+        {{#methods}}
+            override def {{methodName}}(req: {{methodInputType}}): Future[{{methodOutputType}}] = {
+            implicit val ot: ObservableAndTraceable = {{methodInputType}}.observableAndTraceable
+
+            (for {
+            finalResponse <- {{methodName}}FeatureFlags.runAndObserve(
+            action = validateAndProcess,
+            input = req
+            )
+            } yield {
+            finalResponse
+            }).runToFuture(global)
+            }
+
+            private def validateAndProcess(
+            {{methodName}}FeatureFlags: {{methodName}}FeatureFlags,
+            input: {{methodInputType}}
+            ): Task[{{methodOutputType}}] = {
+            (for {
+            validatedRequest <- EitherT[Task, {{methodOutputType}}, {{methodInputType}}](
+            {{methodInputType}}Validator.validate(
+            item = input
+            )
+            )
+            response <- EitherT.liftF[Task, {{methodOutputType}}, {{methodOutputType}}](
+            {{methodInputType}}Processor.process(
+            featureFlags = {{methodName}}FeatureFlags,
+            validatedRequest = validatedRequest
+            )
+            )
+            } yield {
+            response
+            }).value.map(_.merge)
+            }
+        {{/methods}}
+        }
+    {{/serviceMethods}}
+{{/root}}

@@ -169,7 +169,7 @@ object DomainService {
       .getDependencies.asScala
       .map(d =>
         ImportExt(
-          fqdnImport = d.getOptions.getJavaPackage
+          fqdnImport = d.getPackage
         )
       )
       .toList

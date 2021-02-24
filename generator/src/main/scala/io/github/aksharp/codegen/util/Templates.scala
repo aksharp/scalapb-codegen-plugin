@@ -10,13 +10,14 @@ object Templates {
       |package {{javaPackage}}
       |
       |{{#services}}
-      |import {{serviceTypeName}}Grpc._
+      |import {{basePackageName}}.{{serviceTypeName}}Grpc._
       |{{/services}}
       |
       |import io.grpc.Server
       |import io.grpc.netty.NettyServerBuilder
       |import io.grpc.protobuf.services.ProtoReflectionService
       |import scala.concurrent.ExecutionContext
+      |import {{basePackageName}}._
       |
       |object server { self =>
       |    private[this] var s: Server = null
@@ -66,6 +67,7 @@ object Templates {
       |import scala.concurrent.Future
       |import scala.concurrent.ExecutionContext
       |import scala.concurrent.ExecutionContext.global
+      |import {{basePackageName}}._
       |
       |object MockServerMain extends App {
       |
@@ -105,6 +107,7 @@ object Templates {
       |    import {{fqdnImport}}._
       |    {{/imports}}
       |    import scala.concurrent.Future
+      |    import {{basePackageName}}._
       |
       |
       |    // Stubs
@@ -233,6 +236,7 @@ object Templates {
       |
       |    import {{javaPackage}}._
       |    import {{javaPackage}}.mocks._
+      |    import {{basePackageName}}._
       |
       |    case class mockclient(
       |    // for each grpc service
@@ -244,12 +248,14 @@ object Templates {
       |{{/root}}
       |""".stripMargin
 
-  val grpcClient: String = """{{#root}}
+  val grpcClient: String =
+    """{{#root}}
       package {{javaPackage}}
 
       {{#services}}
-      import {{serviceTypeName}}Grpc._
+      import {{basePackageName}}.{{serviceTypeName}}Grpc._
       {{/services}}
+      import {{basePackageName}}._
 
 
       trait GrpcClient {
@@ -272,6 +278,7 @@ object Templates {
       |import org.scalatest.{Matchers, WordSpec}
       |import scala.concurrent.duration.Duration
       |import scala.concurrent.{Await, ExecutionContext}
+      |import {{basePackageName}}._
       |
       |class ExampleSpec extends WordSpec with Matchers {
       |
@@ -313,6 +320,7 @@ object Templates {
       |import scala.concurrent.Future
       |import scala.concurrent.ExecutionContext
       |import scala.concurrent.ExecutionContext.global
+      |import {{basePackageName}}._
       |
       |object Main extends App {
       |
@@ -342,14 +350,96 @@ object Templates {
       |{{/root}}
       |""".stripMargin
 
+  val services: String =
+    """
+      |{{#root}}
+      |/* WIP!!!
+      |package {{javaPackage}}.services
+      |
+      |import cats.data.EitherT
+      |import {{javaPackage}}._
+      |import com.tremorvideo.lib.api.ObservableAndTraceable
+      |import com.tremorvideo.lib.api.fp.util.ObservableAndTraceableService
+      |import monix.eval.Task
+      |import monix.execution.Scheduler
+      |import io.github.aksharp.tc._
+      |import scala.concurrent.Future
+      |import com.tremorvideo.lib.feature.flags.{FeatureFlags, FromBytes}
+      |import io.circe.generic.auto._
+      |import monix.eval.Task
+      |import {{basePackageName}}._
+      |
+      |
+      |{{#serviceMethods}}
+      |{{#methods}}
+      |
+      |case class {{methodName}}FeatureFlags()
+      |
+      |object {{methodName}}FeatureFlags extends FeatureFlags[Task, {{methodName}}FeatureFlags] {
+      |  override def fromBytes(bytes: Array[Byte]): Either[Throwable, {{methodName}}FeatureFlags] =
+      |    FromBytes[{{methodName}}FeatureFlags](bytes)
+      |}
+      |
+      |class {{serviceTypeName}}{{methodInputType}}{{methodOutputType}}Service(
+      |                      {{methodInputType}}Validator: Validator[Task, {{methodInputType}}, {{methodOutputType}}],
+      |                      {{methodInputType}}Processor: Processor[Task, {{methodName}}FeatureFlags, {{methodInputType}}, {{methodOutputType}}]
+      |                    )(
+      |                    implicit observableAndTraceableService: com.tremorvideo.lib.api.fp.util.ObservableAndTraceableService[Task],
+      |                     featureFlagsConfig: com.tremorvideo.lib.feature.flags.FeatureFlagsConfig,
+      |                     s: Scheduler
+      |                    ) extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
+      |
+      |{{#m}}
+      |  override def {{methodName}}(req: {{methodInputType}}): Future[{{methodOutputType}}] = {
+      |    implicit val ot: ObservableAndTraceable = req.observableAndTraceable
+      |
+      |    (for {
+      |      finalResponse <- {{methodName}}FeatureFlags.runAndObserve(
+      |        action = validateAndProcess,
+      |        input = req
+      |      )
+      |    } yield {
+      |      finalResponse
+      |    }).runToFuture(s)
+      |  }
+      |
+      |  private def validateAndProcess(
+      |                                  {{methodName}}FeatureFlags: {{methodName}}FeatureFlags,
+      |                                  input: {{methodInputType}}
+      |                                ): Task[{{methodOutputType}}] = {
+      |    (for {
+      |      validatedRequest <- EitherT[Task, {{methodOutputType}}, {{methodInputType}}](
+      |        {{methodInputType}}Validator.validate(
+      |          item = input
+      |        )
+      |      )
+      |      response <- EitherT.liftF[Task, {{methodOutputType}}, {{methodOutputType}}](
+      |        {{methodInputType}}Processor.process(
+      |          featureFlags = {{methodName}}FeatureFlags,
+      |          validatedRequest = validatedRequest
+      |        )
+      |      )
+      |    } yield {
+      |      response
+      |    }).value.map(_.merge)
+      |  }
+      |{{/m}}
+      |}
+      |{{/methods}}
+      |{{/serviceMethods}}
+      |*/
+      |{{/root}}
+      """.stripMargin
+
   val client: String =
     """
       |{{#root}}
       |package {{javaPackage}}
       |
       |{{#services}}
-      |import {{serviceTypeName}}Grpc._
+      |import {{basePackageName}}.{{serviceTypeName}}Grpc._
       |{{/services}}
+      |import {{basePackageName}}._
       |
       |import io.grpc.netty.{NegotiationType, NettyChannelBuilder}
       |
@@ -381,8 +471,9 @@ object Templates {
       |package {{javaPackage}}
       |
       |{{#services}}
-      |import {{serviceTypeName}}Grpc._
+      |import {{basePackageName}}.{{serviceTypeName}}Grpc._
       |{{/services}}
+      |import {{basePackageName}}._
       |
       |import io.grpc.Server
       |import io.grpc.netty.NettyServerBuilder
@@ -425,9 +516,11 @@ object Templates {
       |{{/root}}
       |""".stripMargin
 
+
   private val m = Map(
     "client.mustache" -> client,
     "ExampleMain.mustache" -> exampleMain,
+    "services.mustache" -> services,
     "ExampleTest.mustache" -> exampleTest,
     "GrpcClient.mustache" -> grpcClient,
     "mockclient.mustache" -> mockclient,

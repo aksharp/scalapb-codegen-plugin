@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "scalapb/scalapb.proto";
+import "ObservableAndTraceable.proto";
 
 option (scalapb.options) = {
   scope: FILE
@@ -9,9 +10,7 @@ option (scalapb.options) = {
   lenses: true
 };
 
-package io.github.aksharp.codegen.example.aksharp.grpc;
-
-option java_package = "io.github.aksharp.codegen.example.funWithNames";
+package io.github.aksharp.codegen.example.funWithNames;
 
 message Person {
     string name = 1;
@@ -20,8 +19,9 @@ message Person {
 }
 
 message PersonRequest {
-    Person person = 1;
-    string suggestedNickname = 2;
+    com.tremorvideo.lib.api.ObservableAndTraceable observableAndTraceable = 1;
+    Person person = 2;
+    string suggestedNickname = 3;
 }
 
 message PersonReply {
@@ -29,7 +29,8 @@ message PersonReply {
 }
 
 message NicknameRequest {
-    string nickname = 1;
+    com.tremorvideo.lib.api.ObservableAndTraceable observableAndTraceable = 1;
+    string nickname = 2;
 }
 
 message NicknameReply {

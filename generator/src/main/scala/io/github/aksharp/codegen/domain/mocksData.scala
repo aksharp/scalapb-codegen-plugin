@@ -1,6 +1,7 @@
 package io.github.aksharp.codegen.domain
 
 case class mocksData(
+                      basePackageName: String,
                       javaPackage: String,
                       services: List[ServiceExt],
                       allMessages: List[Message],

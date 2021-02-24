@@ -45,6 +45,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
           val serviceMocksGenerator = new mocks()
           val mockclientGenerator = new mockclient()
           val exampleMainGenerator = new ExampleMain()
+          val servicesGenerator = new services()
           val exampleTestGenerator = new ExampleTest()
           val mockServerMainGenerator = new MockServerMain()
           val mockserverGenerator = new mockserver()
@@ -52,7 +53,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
             name =>
               val fileDesc = fileDescByName(name)
 
-              val apiGatewayHostname = s"api.gateway.${fileDesc.getOptions.getJavaPackage}"
+              val apiGatewayHostname = s"api.gateway.${fileDesc.getPackage}"
               val localhostHostname = "localhost"
 
               b.addFile(
@@ -65,6 +66,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
               b.addFile(serviceMocksGenerator.generateFile(fileDesc))
               b.addFile(mockclientGenerator.generateFile(fileDesc))
               b.addFile(exampleMainGenerator.generateFile(fileDesc))
+              b.addFile(servicesGenerator.generateFile(fileDesc))
               b.addFile(exampleTestGenerator.generateFile(fileDesc))
               b.addFile(mockserverGenerator.generateFile(fileDesc))
               b.addFile(mockServerMainGenerator.generateFile(fileDesc))
