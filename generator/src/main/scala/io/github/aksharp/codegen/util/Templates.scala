@@ -443,10 +443,10 @@ object Templates {
       |
       |import io.grpc.netty.{NegotiationType, NettyChannelBuilder}
       |
-      |object client extends GrpcClient {
-      |
-      |    private val host = "{{host}}"
-      |    private val port = {{port}}
+      |class Client(
+      |    host: String, // get from config. example: "[service name].service.[region].consul"
+      |    port: Int = {{port}}
+      |) extends GrpcClient {
       |
       |    private val negotiationType: NegotiationType = {{negotiationType}}
       |
