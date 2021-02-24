@@ -522,6 +522,7 @@ object Templates {
       |
       |package {{javaPackage}}.serde
       |
+      |
       |{{#messages}}
       |
       |object {{messageTypeName}}Serde {

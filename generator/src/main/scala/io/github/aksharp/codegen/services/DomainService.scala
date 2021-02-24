@@ -39,6 +39,24 @@ object DomainService {
       ).toList
   }
 
+  def getNonOneOfMessagesWithoutFields(fileDesc: FileDescriptor): List[Message] = {
+    fileDesc
+      .getMessageTypes
+      .asScala
+      .filterNot(message =>
+        message.getRealOneofs != null && message.getRealOneofs.asScala.nonEmpty
+      )
+      .map(message =>
+        Message(
+          messageTypeName = message.getName,
+          fields = List.empty,
+          isOneOf = false
+        )
+      )
+      .toList
+      .distinct
+  }
+
   def toMessages(service: Descriptors.ServiceDescriptor): List[Message] = {
     service
       .getMethods
@@ -167,10 +185,11 @@ object DomainService {
   def toImports(fileDesc: FileDescriptor): List[ImportExt] = {
     fileDesc
       .getDependencies.asScala
-      .map(d =>
-        ImportExt(
-          fqdnImport = d.getPackage
-        )
+      .map(
+        d =>
+          ImportExt(
+            fqdnImport = d.getPackage
+          )
       )
       .toList
   }
