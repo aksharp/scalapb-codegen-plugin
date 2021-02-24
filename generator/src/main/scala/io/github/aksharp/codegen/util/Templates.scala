@@ -542,6 +542,27 @@ object Templates {
       |}
       |
       |{{/messages}}
+      |
+      |{{#messagesWithOneOf}}
+      |
+      |object {{messageTypeName}}Serde {
+      |
+      |    implicit val {{messageTypeName}}Serializer: org.apache.kafka.common.serialization.Serializer[{{basePackageName}}.{{messageTypeName}}] =
+      |        new org.apache.kafka.common.serialization.Serializer[{{basePackageName}}.{{messageTypeName}}] {
+      |            override def serialize(topic: String, data: {{basePackageName}}.{{messageTypeName}}): Array[Byte] =
+      |                data.asMessage.toByteArray
+      |        }
+      |
+      |    implicit val {{messageTypeName}}Deserializer: org.apache.kafka.common.serialization.Deserializer[{{basePackageName}}.{{messageTypeName}}] =
+      |        new org.apache.kafka.common.serialization.Deserializer[{{basePackageName}}.{{messageTypeName}}] {
+      |            override def deserialize(topic: String, data: Array[Byte]): {{basePackageName}}.{{messageTypeName}} =
+      |                {{basePackageName}}.{{messageTypeName}}Message.parseFrom(data).to{{messageTypeName}}
+      |        }
+      |
+      |}
+      |
+      |{{/messagesWithOneOf}}
+      |
       |{{/root}}
       |""".stripMargin
 

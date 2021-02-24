@@ -39,18 +39,15 @@ object DomainService {
       ).toList
   }
 
-  def getNonOneOfMessagesWithoutFields(fileDesc: FileDescriptor): List[Message] = {
+  def getMessagesWithoutFields(fileDesc: FileDescriptor): List[Message] = {
     fileDesc
       .getMessageTypes
       .asScala
-      .filterNot(message =>
-        message.getRealOneofs != null && message.getRealOneofs.asScala.nonEmpty
-      )
       .map(message =>
         Message(
           messageTypeName = message.getName,
           fields = List.empty,
-          isOneOf = false
+          isOneOf = message.getRealOneofs != null && message.getRealOneofs.asScala.nonEmpty
         )
       )
       .toList

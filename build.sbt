@@ -4,8 +4,6 @@ val Scala213 = "2.13.4"
 
 val Scala212 = "2.12.12"
 
-//val Scala211 = "2.11.12"
-
 resolvers += Resolver.sonatypeRepo("snapshots")
 resolvers += Resolver.sonatypeRepo("releases")
 
@@ -57,14 +55,24 @@ def isWindows: Boolean = sys.props("os.name").startsWith("Windows")
 lazy val e2e = (project in file("e2e"))
   .settings(
     libraryDependencies ++= Seq(
-      "com.tremorvideo" %% "lib-kafka" % "8.0.0-SNAPSHOT",
-      "com.tremorvideo" %% "lib-feature-flags" % "3.2.0-SNAPSHOT",
-      "com.tremorvideo" %% "lib-api" % "0.32.0",
+      // type classes
       "io.github.aksharp" %% "scala-type-classes" % "0.1.5",
+
+      // kafka
+      "org.apache.kafka" %% "kafka" % "2.5.0",
+      "org.apache.kafka" % "kafka-clients" % "2.5.0",
+
+      // cats
       "org.typelevel" %% "cats-core" % "2.3.1",
+
+      // monix
       "io.monix" %% "monix" % "3.3.0",
+
+      // test
       "org.scalatest" %% "scalatest" % "3.0.8",
       "org.scalacheck" %% "scalacheck" % "1.15.2",
+
+      // grpc
       "io.grpc" % "grpc-services" % "1.35.0",
       "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
