@@ -15,10 +15,7 @@ class GrpcClient(
   override def getTemplateData(fileDesc: FileDescriptor): GrpcClientData = {
     GrpcClientData(
       basePackageName = fileDesc.getPackage,
-      javaPackage = toPackageWithFileName(
-        packageName = fileDesc.getPackage,
-        fileName = fileDesc.getName
-      ),
+      javaPackage = fileDesc.getPackage,
       services = DomainService.toServices(fileDesc)
     )
   }

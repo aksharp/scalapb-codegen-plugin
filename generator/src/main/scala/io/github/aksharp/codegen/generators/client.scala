@@ -20,10 +20,7 @@ class client(
       host = host,
       negotiationType = "NegotiationType.PLAINTEXT",
       basePackageName = fileDesc.getPackage,
-      javaPackage = toPackageWithFileName(
-        packageName = fileDesc.getPackage,
-        fileName = fileDesc.getName
-      ),
+      javaPackage = fileDesc.getPackage,
       services = DomainService.toServices(fileDesc)
     )
   }

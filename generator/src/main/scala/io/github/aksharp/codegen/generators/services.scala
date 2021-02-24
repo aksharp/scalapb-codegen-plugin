@@ -16,10 +16,7 @@ class services(
     //    val services = DomainService.toServices(fileDesc)
     ServiceData(
       basePackageName = fileDesc.getPackage,
-      javaPackage = toPackageWithFileName(
-        packageName = fileDesc.getPackage,
-        fileName = fileDesc.getName
-      ),
+      javaPackage = fileDesc.getPackage,
       serviceMethods = DomainService.toServiceMethods(fileDesc)
     )
   }

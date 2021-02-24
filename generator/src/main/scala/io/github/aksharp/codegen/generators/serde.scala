@@ -14,10 +14,7 @@ class serde(implicit val engine: TemplateEngine,
   override def getTemplateData(fileDesc: Descriptors.FileDescriptor): SerdeData = {
     SerdeData(
       basePackageName = fileDesc.getPackage,
-      javaPackage = toPackageWithFileName(
-        packageName = fileDesc.getPackage,
-        fileName = fileDesc.getName
-      ),
+      javaPackage = fileDesc.getPackage,
       allMessages = DomainService.getMessagesWithoutFields(fileDesc)
     )
   }

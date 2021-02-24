@@ -16,10 +16,7 @@ class mockserver(implicit val engine: TemplateEngine,
     mockserverData(
       port = "9090",
       basePackageName = fileDesc.getPackage,
-      javaPackage = toPackageWithFileName(
-        packageName = fileDesc.getPackage,
-        fileName = fileDesc.getName
-      ),
+      javaPackage = fileDesc.getPackage,
       services = services,
       servicesAsArguments = DomainService.withSeparator(services)
     )

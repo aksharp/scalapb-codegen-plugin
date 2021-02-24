@@ -5,15 +5,14 @@ import io.grpc._
 import io.grpc.stub.MetadataUtils
 import io.github.aksharp.codegen.example._
 import io.github.aksharp.codegen.example.funWithNames._
-import io.github.aksharp.codegen.example.funWithNames.nicknameApi._
 import io.github.aksharp.codegen.example.funWithNames.GenerateNicknameGrpc._
 import io.github.aksharp.codegen.example.funWithNames.PredictorGrpc._
 import scala.concurrent.{ExecutionContext, Future}
 
 object Server extends App {
 
-  io.github.aksharp.codegen.example.funWithNames.nicknameApi.mocks.GenerateNicknameMock()
-  val x = io.github.aksharp.codegen.example.funWithNames.nicknameApi.mocks.PredictorMock()
+  io.github.aksharp.codegen.example.funWithNames.mocks.GenerateNicknameMock()
+  val x = io.github.aksharp.codegen.example.funWithNames.mocks.PredictorMock()
 
   implicit val ec = ExecutionContext.global
   val generateNickname = new GenerateNicknameGrpc.GenerateNickname {
@@ -29,16 +28,16 @@ object Server extends App {
   }
   val predictor = new PredictorGrpc.Predictor {
     override def predictNickname(request: PersonRequest): Future[PersonReply] = Future.successful(
-      io.github.aksharp.codegen.example.funWithNames.nicknameApi.mocks.aPersonReply()
+      io.github.aksharp.codegen.example.funWithNames.mocks.aPersonReply()
 //      PersonReply(
 //        nickname = s"I predict your nickname to be ${request.name}"
 //      )
     )
   }
 
-  funWithNames.nicknameApi.server.run(
-    generateNickname = funWithNames.nicknameApi.mocks.GenerateNicknameMock(), // generateNickname,
-    predictor = funWithNames.nicknameApi.mocks.PredictorMock() // predictor
+  funWithNames.server.run(
+    generateNickname = funWithNames.mocks.GenerateNicknameMock(), // generateNickname,
+    predictor = funWithNames.mocks.PredictorMock() // predictor
   )
 }
 

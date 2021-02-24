@@ -5,13 +5,6 @@ import io.github.aksharp.codegen.services.DomainService.reservedFieldNames
 
 trait AppUtils {
 
-  def toPackageWithFileName(
-                             packageName: String,
-                             fileName: String
-                           ): String = {
-    s"${packageName}.${fileName.replace(".proto","Api")}"
-  }
-
   def updateFieldNames(messages: List[Message]): List[Message] = {
 
     //TODO: maybe finally use scala lenses for this. Also optimize not transforming if not needed
