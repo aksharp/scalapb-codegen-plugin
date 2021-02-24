@@ -8,7 +8,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 resolvers += Resolver.sonatypeRepo("releases")
 
 ThisBuild / scalaVersion := Scala213
-ThisBuild / version := "0.3.2-SNAPSHOT"
+ThisBuild / version := "0.3.3-SNAPSHOT"
 ThisBuild / organization := "io.github.aksharp"
 
 resolvers ++= Seq(
