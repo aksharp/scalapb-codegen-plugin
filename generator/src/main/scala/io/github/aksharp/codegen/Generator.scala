@@ -66,11 +66,11 @@ object Generator extends protocbridge.ProtocCodeGenerator {
               b.addFile(serverGenerator.generateFile(fileDesc))
               b.addFile(serviceMocksGenerator.generateFile(fileDesc))
               b.addFile(mockclientGenerator.generateFile(fileDesc))
-              b.addFile(exampleMainGenerator.generateFile(fileDesc))
-              b.addFile(servicesGenerator.generateFile(fileDesc))
-              b.addFile(exampleTestGenerator.generateFile(fileDesc))
+//              b.addFile(exampleMainGenerator.generateFile(fileDesc))
+//              b.addFile(servicesGenerator.generateFile(fileDesc))
+//              b.addFile(exampleTestGenerator.generateFile(fileDesc))
               b.addFile(mockserverGenerator.generateFile(fileDesc))
-              b.addFile(mockServerMainGenerator.generateFile(fileDesc))
+//              b.addFile(mockServerMainGenerator.generateFile(fileDesc))
               b.addFile(serdeGenerator.generateFile(fileDesc))
           }
           b.build.toByteArray
