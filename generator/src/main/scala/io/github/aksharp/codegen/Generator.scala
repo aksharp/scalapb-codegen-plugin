@@ -49,6 +49,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
           val exampleTestGenerator = new ExampleTest()
           val mockServerMainGenerator = new MockServerMain()
           val mockserverGenerator = new mockserver()
+          val serdeGenerator = new serde()
           request.getFileToGenerateList.asScala.foreach {
             name =>
               val fileDesc = fileDescByName(name)
@@ -70,6 +71,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
               b.addFile(exampleTestGenerator.generateFile(fileDesc))
               b.addFile(mockserverGenerator.generateFile(fileDesc))
               b.addFile(mockServerMainGenerator.generateFile(fileDesc))
+              b.addFile(serdeGenerator.generateFile(fileDesc))
           }
           b.build.toByteArray
         }

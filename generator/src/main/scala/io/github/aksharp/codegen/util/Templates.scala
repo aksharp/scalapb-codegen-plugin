@@ -516,6 +516,34 @@ object Templates {
       |{{/root}}
       |""".stripMargin
 
+  val serde =
+    """
+      |{{#root}}
+      |
+      |package {{javaPackage}}.serde
+      |
+      |{{#messages}}
+      |
+      |object {{messageTypeName}}Serde {
+      |
+      |    implicit val {{messageTypeName}}Serializer: org.apache.kafka.common.serialization.Serializer[{{basePackageName}}.{{messageTypeName}}] =
+      |        new org.apache.kafka.common.serialization.Serializer[{{basePackageName}}.{{messageTypeName}}] {
+      |            override def serialize(topic: String, data: {{basePackageName}}.{{messageTypeName}}): Array[Byte] =
+      |                data.toByteArray
+      |        }
+      |
+      |    implicit val {{messageTypeName}}Deserializer: org.apache.kafka.common.serialization.Deserializer[{{basePackageName}}.{{messageTypeName}}] =
+      |        new org.apache.kafka.common.serialization.Deserializer[{{basePackageName}}.{{messageTypeName}}] {
+      |            override def deserialize(topic: String, data: Array[Byte]): {{basePackageName}}.{{messageTypeName}} =
+      |                {{basePackageName}}.{{messageTypeName}}.parseFrom(data)
+      |        }
+      |
+      |}
+      |
+      |{{/messages}}
+      |{{/root}}
+      |""".stripMargin
+
 
   private val m = Map(
     "client.mustache" -> client,
@@ -527,7 +555,8 @@ object Templates {
     "mocks.mustache" -> mocks,
     "MockServerMain.mustache" -> mockServerMain,
     "server.mustache" -> server,
-    "mockserver.mustache" -> mockserver
+    "mockserver.mustache" -> mockserver,
+    "serde.mustache" -> serde
   )
 
 }
