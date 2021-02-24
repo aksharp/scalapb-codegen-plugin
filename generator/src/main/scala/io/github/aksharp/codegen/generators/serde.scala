@@ -12,7 +12,6 @@ class serde(implicit val engine: TemplateEngine,
                       ) extends MustacheTemplateBase[SerdeData] with AppUtils {
 
   override def getTemplateData(fileDesc: Descriptors.FileDescriptor): SerdeData = {
-//    val services: List[ServiceExt] = DomainService.toServicesExt(fileDesc)
     val allMessages: List[Message] = DomainService.getNonOneOfMessagesWithoutFields(fileDesc)
     SerdeData(
       basePackageName = fileDesc.getPackage,
@@ -20,10 +19,9 @@ class serde(implicit val engine: TemplateEngine,
         packageName = fileDesc.getPackage,
         fileName = fileDesc.getName
       ),
-      messages = //services.flatMap(serviceExt => updateFieldNames(serviceExt.messages)).distinct
+      messages =
         allMessages
         .filterNot(_.isOneOf)
-        .filterNot(_.messageTypeName.contains("ObservableAndTraceable"))
     )
   }
 }
