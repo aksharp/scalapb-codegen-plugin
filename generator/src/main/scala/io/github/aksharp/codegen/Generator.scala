@@ -52,7 +52,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
             )
           )
 
-//          CodeGenResponse.succeed(files, Set(CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL))
+          //          CodeGenResponse.succeed(files, Set(CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL))
 
           val defaultPort = 8080
 
@@ -80,7 +80,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
               b.addFile(serviceMocksGenerator.generateFile(fileDesc))
               b.addFile(mockclientGenerator.generateFile(fileDesc))
               //              b.addFile(exampleMainGenerator.generateFile(fileDesc))
-              //              b.addFile(servicesGenerator.generateFile(fileDesc))
+              b.addFile(servicesGenerator.generateFile(fileDesc))
               //              b.addFile(exampleTestGenerator.generateFile(fileDesc))
               b.addFile(mockserverGenerator.generateFile(fileDesc))
               //              b.addFile(mockServerMainGenerator.generateFile(fileDesc))

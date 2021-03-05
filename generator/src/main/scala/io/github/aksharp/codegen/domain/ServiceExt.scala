@@ -7,4 +7,11 @@ case class ServiceExt(
                        serviceTypeName: String,
                        serviceMethods: List[WithSeparator[Method]],
                        messages: List[Message]
-                     )
+                     ) {
+
+  serviceMethods.map { ms =>
+    ms.value
+
+  }
+
+}

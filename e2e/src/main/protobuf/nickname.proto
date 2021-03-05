@@ -20,7 +20,7 @@ message Person {
 }
 
 message PersonRequest {
-    io.github.aksharp.codegen.example.api.ObservableAndTraceable observableAndTraceable = 1;
+    com.tremorvideo.api.observable.ObservableAndTraceable observableAndTraceable = 1;
     Person person = 2;
     string suggestedNickname = 3;
 }
@@ -30,7 +30,7 @@ message PersonReply {
 }
 
 message NicknameRequest {
-    io.github.aksharp.codegen.example.api.ObservableAndTraceable observableAndTraceable = 1;
+    com.tremorvideo.api.observable.ObservableAndTraceable observableAndTraceable = 1;
     string nickname = 2;
 }
 

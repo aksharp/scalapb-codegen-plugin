@@ -10,7 +10,7 @@ option (scalapb.options) = {
   preserve_unknown_fields: false
 };
 
-package io.github.aksharp.codegen.example.api;
+package com.tremorvideo.api.observable;
 
 message ObservableAndTraceableBase {
     string serviceInstanceCorrelationId = 1;

@@ -59,7 +59,17 @@ def isWindows: Boolean = sys.props("os.name").startsWith("Windows")
 lazy val e2e = (project in file("e2e"))
   .settings(
 
-    libraryDependencies ++= Seq(
+    resolvers ++= Seq(
+      ("Artifactory Releases" at "http://artifactory.service.iad1.consul:8081/artifactory/libs-release/").withAllowInsecureProtocol(true),
+      ("Artifactory Snapshots" at "http://artifactory.service.iad1.consul:8081/artifactory/libs-snapshot/").withAllowInsecureProtocol(true)
+    ),
+
+
+      libraryDependencies ++= Seq(
+      // private repos (type classes and domain objects to be extracted into public repo)
+      "com.tremorvideo" %% "lib-feature-flags" % "4.1.0-SNAPSHOT",
+      "com.tremorvideo" %% "api" % "1.3.1",
+
       // type classes
       "io.github.aksharp" %% "scala-type-classes" % "0.1.5",
 
