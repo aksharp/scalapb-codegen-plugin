@@ -134,11 +134,19 @@ object DomainService {
       "Float" -> "Gen.choose(min = Float.MinValue, max = Float.MaxValue).sample.get",
       "Int" -> "Gen.choose(min = Int.MinValue, max = Int.MaxValue).sample.get",
       "Long" -> "Gen.choose(min = Long.MinValue, max = Long.MaxValue).sample.get",
+
+      "Option[String]" -> "Gen.option(Gen.alphaNumStr).sample.get",
+      "Option[Boolean]" -> "Gen.option(Gen.oneOf(Seq(true, false))).sample.get",
+      "Option[Double]" -> "Gen.option(Gen.choose(min = Double.MinValue, max = Double.MaxValue)).sample.get",
+      "Option[Float]" -> "Gen.option(Gen.choose(min = Float.MinValue, max = Float.MaxValue)).sample.get",
+      "Option[Int]" -> "Gen.option(Gen.choose(min = Int.MinValue, max = Int.MaxValue)).sample.get",
+      "Option[Long]" -> "Gen.option(Gen.choose(min = Long.MinValue, max = Long.MaxValue)).sample.get",
+
       "Array[Byte]" -> "Gen.alphaNumStr.sample.get.getBytes"
     )
     generators.getOrElse(
       scalaType,
-      s"a$scalaType()"
+      s"a${scalaType.replace("[","").replace("]","")}()"
     )
   }
 
@@ -152,16 +160,25 @@ object DomainService {
       "Float" -> "Gen.choose(min = Float.MinValue, max = Float.MaxValue)",
       "Int" -> "Gen.choose(min = Int.MinValue, max = Int.MaxValue)",
       "Long" -> "Gen.choose(min = Long.MinValue, max = Long.MaxValue)",
+
+      "Option[String]" -> "Gen.option(Gen.alphaNumStr)",
+      "Option[Boolean]" -> "Gen.option(Gen.oneOf(Seq(true, false)))",
+      "Option[Double]" -> "Gen.option(Gen.choose(min = Double.MinValue, max = Double.MaxValue))",
+      "Option[Float]" -> "Gen.option(Gen.choose(min = Float.MinValue, max = Float.MaxValue))",
+      "Option[Int]" -> "Gen.option(Gen.choose(min = Int.MinValue, max = Int.MaxValue))",
+      "Option[Long]" -> "Gen.option(Gen.choose(min = Long.MinValue, max = Long.MaxValue))",
+      
       "Array[Byte]" -> "Gen.alphaNumStr.map(_.getBytes)"
     )
     generators.getOrElse(
       scalaType,
-      s"${scalaType}Gen()"
+      s"${scalaType.replace("[","").replace("]","")}Gen()"
     )
   }
 
 
   def toScalaType(fileDescriptor: Descriptors.FieldDescriptor): String = {
+
     val m = Map[JavaType, String](
       JavaType.BOOLEAN -> "Boolean",
       JavaType.BYTE_STRING -> "Array[Byte]",
@@ -175,6 +192,7 @@ object DomainService {
     fileDescriptor.getJavaType match {
       case JavaType.MESSAGE => fileDescriptor.toProto.getTypeName.split("\\.").last
       case JavaType.ENUM => "JavaType.ENUM is not yet supported"
+      case javaType if fileDescriptor.hasOptionalKeyword => m.get(javaType).map(t => s"Option[$t]").getOrElse(s"Could not find match for JavaType: ${javaType.toString}")
       case javaType => m.getOrElse(javaType, s"Could not find match for JavaType: ${javaType.toString}")
     }
   }

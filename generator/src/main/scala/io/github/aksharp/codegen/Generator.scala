@@ -5,7 +5,7 @@ import com.google.protobuf.compiler.PluginProtos.{CodeGeneratorRequest, CodeGene
 import com.google.protobuf.{CodedInputStream, ExtensionRegistry}
 import io.github.aksharp.codegen.generators._
 import org.fusesource.scalate.TemplateEngine
-import protocgen.CodeGenRequest
+import protocgen.{CodeGenRequest, CodeGenResponse}
 import protocgen.CodeGenRequest.fileDescriptorsByName
 import scalapb.compiler.DescriptorImplicits
 
@@ -27,6 +27,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
     scalapb.options.Scalapb.registerAllExtensions(registry)
     val request = CodeGeneratorRequest.parseFrom(input)
     val b = CodeGeneratorResponse.newBuilder
+
 
     scalapb.compiler.ProtobufGenerator.parseParameters(request.getParameter) match {
       case Right(params) =>
@@ -51,6 +52,8 @@ object Generator extends protocbridge.ProtocCodeGenerator {
             )
           )
 
+//          CodeGenResponse.succeed(files, Set(CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL))
+
           val defaultPort = 8080
 
           val iclientGenerator = new GrpcClient()
@@ -66,6 +69,10 @@ object Generator extends protocbridge.ProtocCodeGenerator {
           request.getFileToGenerateList.asScala.foreach {
             name =>
               val fileDesc = fileDescByName(name)
+
+              b.setSupportedFeatures(
+                CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL.getNumber
+              )
 
               b.addFile(new client(defaultPort).generateFile(fileDesc))
               b.addFile(iclientGenerator.generateFile(fileDesc))
