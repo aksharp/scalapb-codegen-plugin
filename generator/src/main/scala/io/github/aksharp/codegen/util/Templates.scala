@@ -456,9 +456,25 @@ override def fromBytes(bytes: Array[Byte]): Either[Throwable, {{methodName}}Feat
 
 
             private def {{methodName}}ValidateAndProcess(
-              placementBudgetFeatureFlags: FF,
+              featureFlags: FF,
               input: {{methodInputType}}
-            ): Task[{{methodOutputType}}] = ???
+            ): Task[{{methodOutputType}}] = {
+              (for {
+                validatedRequest <- EitherT[Task, {{methodOutputType}}, {{methodInputType}}](
+                  {{methodInputType}}Validator.validate(
+                    item = input
+                  )
+                )
+                response <- EitherT.liftF[Task, {{methodOutputType}}, {{methodOutputType}}](
+                  {{methodInputType}}Processor.process(
+                    featureFlags = featureFlags,
+                    validatedRequest = validatedRequest
+                  )
+                )
+              } yield {
+                response
+              }).value.map(_.merge)
+            }
 
 
           {{/value}}
