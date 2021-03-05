@@ -5,8 +5,10 @@ import com.google.protobuf.compiler.PluginProtos.{CodeGeneratorRequest, CodeGene
 import com.google.protobuf.{CodedInputStream, ExtensionRegistry}
 import io.github.aksharp.codegen.generators._
 import org.fusesource.scalate.TemplateEngine
+import protocgen.CodeGenRequest
+import protocgen.CodeGenRequest.fileDescriptorsByName
 import scalapb.compiler.DescriptorImplicits
-import scalapb.options.compiler.Scalapb
+
 import scala.jdk.CollectionConverters._
 
 /** This is the interface that code generators need to implement. */
@@ -22,7 +24,7 @@ object Generator extends protocbridge.ProtocCodeGenerator {
 
   def run(input: CodedInputStream): Array[Byte] = {
     val registry = ExtensionRegistry.newInstance()
-    Scalapb.registerAllExtensions(registry)
+    scalapb.options.Scalapb.registerAllExtensions(registry)
     val request = CodeGeneratorRequest.parseFrom(input)
     val b = CodeGeneratorResponse.newBuilder
 
@@ -36,7 +38,18 @@ object Generator extends protocbridge.ProtocCodeGenerator {
                 acc + (fp.getName -> FileDescriptor.buildFrom(fp, deps.toArray))
             }
 
-          implicit val implicits = new DescriptorImplicits(params, fileDescByName.values.toVector)
+          implicit val implicits = DescriptorImplicits.fromCodeGenRequest(
+            params,
+            new CodeGenRequest(
+              parameter = request.getParameter(),
+              filesToGenerate =
+                request.getFileToGenerateList().asScala.toVector.map(fileDescByName),
+              allProtos = fileDescByName.values.toVector,
+              compilerVersion =
+                if (request.hasCompilerVersion()) Some(request.getCompilerVersion()) else None,
+              request
+            )
+          )
 
           val defaultPort = 8080
 
@@ -54,29 +67,26 @@ object Generator extends protocbridge.ProtocCodeGenerator {
             name =>
               val fileDesc = fileDescByName(name)
 
-              val apiGatewayHostname = s"api.gateway.${fileDesc.getPackage}"
-              val localhostHostname = "localhost"
-
-              b.addFile(
-                new client(defaultPort, localhostHostname)
-                  .generateFile(fileDesc)
-              )
-
+              b.addFile(new client(defaultPort).generateFile(fileDesc))
               b.addFile(iclientGenerator.generateFile(fileDesc))
               b.addFile(serverGenerator.generateFile(fileDesc))
               b.addFile(serviceMocksGenerator.generateFile(fileDesc))
               b.addFile(mockclientGenerator.generateFile(fileDesc))
-//              b.addFile(exampleMainGenerator.generateFile(fileDesc))
-//              b.addFile(servicesGenerator.generateFile(fileDesc))
-//              b.addFile(exampleTestGenerator.generateFile(fileDesc))
+              //              b.addFile(exampleMainGenerator.generateFile(fileDesc))
+              //              b.addFile(servicesGenerator.generateFile(fileDesc))
+              //              b.addFile(exampleTestGenerator.generateFile(fileDesc))
               b.addFile(mockserverGenerator.generateFile(fileDesc))
-//              b.addFile(mockServerMainGenerator.generateFile(fileDesc))
+              //              b.addFile(mockServerMainGenerator.generateFile(fileDesc))
               b.addFile(serdeGenerator.generateFile(fileDesc))
           }
           b.build.toByteArray
         }
         catch {
-          case e: Throwable => b.setError(e.getMessage)
+          case e: Throwable => {
+            e.printStackTrace()
+            if (e.getMessage != null)
+              b.setError(e.getMessage)
+          }
         }
       case Left(error) =>
         b.setError(error)

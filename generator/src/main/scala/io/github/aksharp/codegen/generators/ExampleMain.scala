@@ -15,7 +15,6 @@ class ExampleMain(implicit val engine: TemplateEngine,
     val services = DomainService.toServices(fileDesc)
     ExampleMainData(
       basePackageName = fileDesc.getPackage,
-      javaPackage = fileDesc.getPackage,
       serviceMethods = DomainService.toServiceMethods(fileDesc),
       servicesAsArguments = DomainService.withSeparator(services)
     )

@@ -14,7 +14,6 @@ class mockclient(implicit val engine: TemplateEngine,
     val services = DomainService.toServices(fileDesc)
     mockclientData(
       basePackageName = fileDesc.getPackage,
-      javaPackage = fileDesc.getPackage,
       servicesAsArguments = DomainService.withSeparator(services)
     )
   }

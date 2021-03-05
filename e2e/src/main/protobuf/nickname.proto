@@ -19,7 +19,7 @@ message Person {
 }
 
 message PersonRequest {
-    com.tremorvideo.lib.api.ObservableAndTraceable observableAndTraceable = 1;
+    com.example.api.ObservableAndTraceable observableAndTraceable = 1;
     Person person = 2;
     string suggestedNickname = 3;
 }
@@ -29,7 +29,7 @@ message PersonReply {
 }
 
 message NicknameRequest {
-    com.tremorvideo.lib.api.ObservableAndTraceable observableAndTraceable = 1;
+    com.example.api.ObservableAndTraceable observableAndTraceable = 1;
     string nickname = 2;
 }
 

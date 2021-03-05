@@ -14,7 +14,6 @@ class ExampleTest(implicit val engine: TemplateEngine,
   override def getTemplateData(fileDesc: Descriptors.FileDescriptor): ExampleTestData = {
     ExampleTestData(
       basePackageName = fileDesc.getPackage,
-      javaPackage = fileDesc.getPackage,
       services = DomainService.toServicesExt(fileDesc)
     )
   }

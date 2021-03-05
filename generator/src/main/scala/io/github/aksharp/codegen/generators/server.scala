@@ -18,7 +18,6 @@ class server(
     serverData(
       port = port.toString,
       basePackageName = fileDesc.getPackage,
-      javaPackage = fileDesc.getPackage,
       services = services,
       servicesAsArguments = DomainService.withSeparator(services)
     )

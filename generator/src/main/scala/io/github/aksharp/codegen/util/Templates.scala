@@ -7,7 +7,7 @@ object Templates {
   val server: String =
     """
       |{{#root}}
-      |package {{javaPackage}}
+      |package {{basePackageName}}
       |
       |{{#services}}
       |import {{basePackageName}}.{{serviceTypeName}}Grpc._
@@ -61,9 +61,9 @@ object Templates {
     """
       |{{#root}}
       |/*
-      |package {{javaPackage}}
+      |package {{basePackageName}}
       |
-      |import {{javaPackage}}.mocks._
+      |import {{basePackageName}}.mocks._
       |import scala.concurrent.Future
       |import scala.concurrent.ExecutionContext
       |import scala.concurrent.ExecutionContext.global
@@ -99,9 +99,9 @@ object Templates {
     """
       |{{#root}}
       |
-      |    package {{javaPackage}}.mocks
+      |    package {{basePackageName}}.mocks
       |
-      |    import {{javaPackage}}._
+      |    import {{basePackageName}}._
       |    import org.scalacheck.{Arbitrary, Gen}
       |    {{#imports}}
       |    import {{fqdnImport}}._
@@ -232,10 +232,10 @@ object Templates {
   val mockclient: String =
     """
       |{{#root}}
-      |    package {{javaPackage}}.mocks
+      |    package {{basePackageName}}.mocks
       |
-      |    import {{javaPackage}}._
-      |    import {{javaPackage}}.mocks._
+      |    import {{basePackageName}}._
+      |    import {{basePackageName}}.mocks._
       |    import {{basePackageName}}._
       |
       |    case class mockclient(
@@ -250,7 +250,7 @@ object Templates {
 
   val grpcClient: String =
     """{{#root}}
-      package {{javaPackage}}
+      package {{basePackageName}}
 
       {{#services}}
       import {{basePackageName}}.{{serviceTypeName}}Grpc._
@@ -272,9 +272,9 @@ object Templates {
     """
       |{{#root}}
       |/*
-      |package {{javaPackage}}.example.test
+      |package {{basePackageName}}.example.test
       |
-      |import {{javaPackage}}._
+      |import {{basePackageName}}._
       |import org.scalatest.{Matchers, WordSpec}
       |import scala.concurrent.duration.Duration
       |import scala.concurrent.{Await, ExecutionContext}
@@ -284,7 +284,7 @@ object Templates {
       |
       |  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
       |
-      |// TODO: start server before testing (refer to example main in {{javaPackage}}.Main)
+      |// TODO: start server before testing (refer to example main in {{basePackageName}}.Main)
       |
       |{{#services}}
       |    {{#serviceMethods}}
@@ -315,7 +315,7 @@ object Templates {
     """
       |{{#root}}
       |/*
-      |package {{javaPackage}}
+      |package {{basePackageName}}
       |
       |import scala.concurrent.Future
       |import scala.concurrent.ExecutionContext
@@ -354,10 +354,10 @@ object Templates {
     """
       |{{#root}}
       |/* WIP!!!
-      |package {{javaPackage}}.services
+      |package {{basePackageName}}.services
       |
       |import cats.data.EitherT
-      |import {{javaPackage}}._
+      |import {{basePackageName}}._
       |import com.tremorvideo.lib.api.ObservableAndTraceable
       |import com.tremorvideo.lib.api.fp.util.ObservableAndTraceableService
       |import monix.eval.Task
@@ -434,7 +434,7 @@ object Templates {
   val client: String =
     """
       |{{#root}}
-      |package {{javaPackage}}
+      |package {{basePackageName}}
       |
       |{{#services}}
       |import {{basePackageName}}.{{serviceTypeName}}Grpc._
@@ -468,7 +468,7 @@ object Templates {
   val mockserver =
     """
       |{{#root}}
-      |package {{javaPackage}}
+      |package {{basePackageName}}
       |
       |{{#services}}
       |import {{basePackageName}}.{{serviceTypeName}}Grpc._
@@ -520,7 +520,7 @@ object Templates {
     """
       |{{#root}}
       |
-      |package {{javaPackage}}.serde
+      |package {{basePackageName}}.serde
       |
       |
       |{{#messages}}

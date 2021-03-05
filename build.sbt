@@ -1,6 +1,6 @@
-import sbt.Resolver
+import sbt.{Compile, Resolver}
 
-val Scala213 = "2.13.4"
+val Scala213 = "2.13.5"
 
 val Scala212 = "2.12.12"
 
@@ -8,7 +8,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 resolvers += Resolver.sonatypeRepo("releases")
 
 ThisBuild / scalaVersion := Scala213
-ThisBuild / version := "0.4.0-SNAPSHOT"
+ThisBuild / version := "0.4.1-SNAPSHOT"
 ThisBuild / organization := "io.github.aksharp"
 
 resolvers ++= Seq(
@@ -41,7 +41,11 @@ lazy val generator = (project in file("generator"))
       baseDirectory.value / "templates"
     },
 
-    Compile / mainClass := Some("io.github.aksharp.codegen.Main")
+    Compile / mainClass := Some("io.github.aksharp.codegen.Main"),
+
+    Compile / PB.protocOptions += "--experimental_allow_proto3_optional"
+
+
 //
 //    resourceDirectory in Compile := file(".") / "./generator/src/main/scala/templates",
 //    resourceDirectory in Runtime := file(".") / "./generator/src/main/scala/templates"
@@ -54,6 +58,7 @@ def isWindows: Boolean = sys.props("os.name").startsWith("Windows")
 // generator, and provide this to sbt-protoc as a plugin.
 lazy val e2e = (project in file("e2e"))
   .settings(
+
     libraryDependencies ++= Seq(
       // type classes
       "io.github.aksharp" %% "scala-type-classes" % "0.1.5",
@@ -73,7 +78,7 @@ lazy val e2e = (project in file("e2e"))
       "org.scalacheck" %% "scalacheck" % "1.15.2",
 
       // grpc
-      "io.grpc" % "grpc-services" % "1.35.0",
+      "io.grpc" % "grpc-services" % "1.36.0",
       "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
@@ -85,6 +90,8 @@ lazy val e2e = (project in file("e2e"))
     // Regenerates protos on each compile even if they have not changed. This is so changes in the plugin
     // are picked up without having to manually clean.
     Compile / PB.recompile := true,
+
+    Compile / PB.protocOptions += "--experimental_allow_proto3_optional",
 
     Compile / PB.targets := Seq(
       scalapb.gen() -> (sourceManaged in Compile).value,

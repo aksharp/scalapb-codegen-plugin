@@ -8,8 +8,7 @@ import org.fusesource.scalate.TemplateEngine
 import scalapb.compiler.DescriptorImplicits
 
 class client(
-              port: Int,
-              host: String
+              port: Int
             )(implicit val engine: TemplateEngine,
               val descriptorImplicits: DescriptorImplicits
             ) extends MustacheTemplateBase[clientData] with AppUtils {
@@ -17,10 +16,8 @@ class client(
   override def getTemplateData(fileDesc: FileDescriptor): clientData = {
     clientData(
       port = port.toString,
-      host = host,
       negotiationType = "NegotiationType.PLAINTEXT",
       basePackageName = fileDesc.getPackage,
-      javaPackage = fileDesc.getPackage,
       services = DomainService.toServices(fileDesc)
     )
   }

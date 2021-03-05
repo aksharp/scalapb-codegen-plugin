@@ -10,7 +10,7 @@ option (scalapb.options) = {
   preserve_unknown_fields: false
 };
 
-package com.tremorvideo.lib.api;
+package com.example.api;
 
 message ObservableAndTraceableBase {
     string serviceInstanceCorrelationId = 1;

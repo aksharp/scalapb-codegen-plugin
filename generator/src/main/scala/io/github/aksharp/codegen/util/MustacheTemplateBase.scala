@@ -22,12 +22,12 @@ trait MustacheTemplateBase[A] {
     b.setName(s"${fileDesc.scalaDirectory}/${name}.scala")
 
 
-//    val templateFile = new File(s"generator/templates/$templateName")
+    //    val templateFile = new File(s"generator/templates/$templateName")
 
-//    val content: String = engine.layout(
-//      source = TemplateSource.fromFile(templateFile),
-//      attributes = Map[String, Any](rootElementName -> getTemplateData(fileDesc))
-//    )
+    //    val content: String = engine.layout(
+    //      source = TemplateSource.fromFile(templateFile),
+    //      attributes = Map[String, Any](rootElementName -> getTemplateData(fileDesc))
+    //    )
 
     val content: String = engine.layout(
       source = TemplateSource.fromText(templateName, Templates.getTemplateContent(templateName)),

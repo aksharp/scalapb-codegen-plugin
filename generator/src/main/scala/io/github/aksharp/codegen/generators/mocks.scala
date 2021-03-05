@@ -21,7 +21,6 @@ class mocks(
     val services: List[ServiceExt] = DomainService.toServicesExt(fileDesc)
     domain.mocksData(
       basePackageName = fileDesc.getPackage,
-      javaPackage = fileDesc.getPackage,
       services = services,
       allMessages = services.flatMap(serviceExt => updateFieldNames(serviceExt.messages)).distinct,
       allImports = DomainService.toImports(fileDesc)

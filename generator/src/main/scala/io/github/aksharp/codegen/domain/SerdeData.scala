@@ -2,7 +2,6 @@ package io.github.aksharp.codegen.domain
 
 case class SerdeData(
                       basePackageName: String,
-                      javaPackage: String,
                       allMessages: List[Message]
                     ) {
   val messages = allMessages.filterNot(_.isOneOf)
