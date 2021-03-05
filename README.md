@@ -1,13 +1,15 @@
 # scalapb-codegen-plugin
 
-For ScalaPB generated case classes from proto definitions, this plugin generates:
+
+For ScalaPB generated case classes from proto definitions, this plugin generates: 
 1. grpc server
 2. grpc client
 3. scalacheck generators and arbitraries for property based testing
-4. mocks
+4. mocks 
 5. mock grpc server
 6. mock grpc client
-7. kafka serde (serialization / deserialization)
+7. kafka serde (serialization / deserialization) 
+
 
 # Using the plugin
 
