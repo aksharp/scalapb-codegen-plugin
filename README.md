@@ -16,14 +16,13 @@ To test the plugin, within SBT:
 
 # Using the plugin
 
-To add the plugin to another project, you need publish it first on maven, or publish locally by using `+publishLocal`.
-
-In the other project, add the following to `project/plugins.sbt`:
+Add the following to `project/plugins.sbt`:
 
 ```
-addSbtPlugin("com.thesamet" % "sbt-protoc" % "1.0.0")
+addSbtPlugin("com.thesamet" % "sbt-protoc" % "1.0.1")
+libraryDependencies += "com.thesamet.scalapb" %% "compilerplugin" % "0.11.0-M5"
 
-libraryDependencies += "io.github.aksharp" %% "scalapb-codegen-plugin" % "0.2.0-SNAPSHOT"
+libraryDependencies += "io.github.aksharp" %% "scalapb-codegen-plugin" % "0.4.1-SNAPSHOT"
 ```
 
 and the following to your `build.sbt`:
