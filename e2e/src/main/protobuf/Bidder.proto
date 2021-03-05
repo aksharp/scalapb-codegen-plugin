@@ -33,7 +33,7 @@ message BidRequest {
     int64 id = 2;
     UserData userData = 3;
     repeated Placement placements = 4;
-    int64 maybeNumber = 5;
+    optional int64 maybeNumber = 5;
 }
 
 message BidResponse {
