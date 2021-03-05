@@ -19,7 +19,7 @@ Add the following to `project/plugins.sbt`:
 addSbtPlugin("com.thesamet" % "sbt-protoc" % "1.0.1")
 libraryDependencies += "com.thesamet.scalapb" %% "compilerplugin" % "0.11.0-M5"
 
-libraryDependencies += "io.github.aksharp" %% "scalapb-codegen-plugin" % "0.4.1-SNAPSHOT"
+libraryDependencies += "io.github.aksharp" %% "scalapb-codegen-plugin" % "0.5.0-SNAPSHOT"
 ```
 
 and the following to your `build.sbt`:
