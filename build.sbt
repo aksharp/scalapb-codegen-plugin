@@ -64,8 +64,8 @@ lazy val e2e = (project in file("e2e"))
       "io.github.aksharp" %% "scala-type-classes" % "0.1.5",
 
       // kafka
-      "org.apache.kafka" %% "kafka" % "2.5.0",
-      "org.apache.kafka" % "kafka-clients" % "2.5.0",
+      "org.apache.kafka" %% "kafka" % "2.7.0",
+      "org.apache.kafka" % "kafka-clients" % "2.7.0",
 
       // cats
       "org.typelevel" %% "cats-core" % "2.3.1",
@@ -73,12 +73,15 @@ lazy val e2e = (project in file("e2e"))
       // monix
       "io.monix" %% "monix" % "3.3.0",
 
+      // cats
+      "org.typelevel" %% "cats-core" % "2.4.2",
+
       // test
       "org.scalatest" %% "scalatest" % "3.0.8",
       "org.scalacheck" %% "scalacheck" % "1.15.2",
 
       // grpc
-      "io.grpc" % "grpc-services" % "1.36.0",
+      "io.grpc" % "grpc-services" % scalapb.compiler.Version.grpcJavaVersion,
       "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
       "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"

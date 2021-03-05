@@ -8,6 +8,7 @@ option (scalapb.options) = {
   flat_package: true
   single_file: true
   lenses: true
+  preserve_unknown_fields: false
 };
 
 package io.github.aksharp.codegen.example.bidder;
@@ -28,7 +29,7 @@ message Placement {
 }
 
 message BidRequest {
-    com.example.api.ObservableAndTraceable observableAndTraceable = 1;
+    io.github.aksharp.codegen.example.api.ObservableAndTraceable observableAndTraceable = 1;
     int64 id = 2;
     UserData userData = 3;
     repeated Placement placements = 4;

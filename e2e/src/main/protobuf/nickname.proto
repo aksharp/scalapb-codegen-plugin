@@ -8,6 +8,7 @@ option (scalapb.options) = {
   flat_package: true
   single_file: true
   lenses: true
+  preserve_unknown_fields: false
 };
 
 package io.github.aksharp.codegen.example.funWithNames;
@@ -19,7 +20,7 @@ message Person {
 }
 
 message PersonRequest {
-    com.example.api.ObservableAndTraceable observableAndTraceable = 1;
+    io.github.aksharp.codegen.example.api.ObservableAndTraceable observableAndTraceable = 1;
     Person person = 2;
     string suggestedNickname = 3;
 }
@@ -29,7 +30,7 @@ message PersonReply {
 }
 
 message NicknameRequest {
-    com.example.api.ObservableAndTraceable observableAndTraceable = 1;
+    io.github.aksharp.codegen.example.api.ObservableAndTraceable observableAndTraceable = 1;
     string nickname = 2;
 }
 

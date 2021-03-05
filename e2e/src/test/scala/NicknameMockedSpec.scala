@@ -4,6 +4,8 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
+import io.github.aksharp.codegen.example.funWithNames._
+import io.github.aksharp.codegen.example.funWithNames.mocks._
 
 class NicknameMockedSpec extends WordSpec with Matchers with Eventually {
 
@@ -11,7 +13,7 @@ class NicknameMockedSpec extends WordSpec with Matchers with Eventually {
 
   "test" in {
     Await.result(for {
-      res <- aksharp.funWithNames.mocks.mockclient(
+      res <- new io.github.aksharp.codegen.example.funWithNames.mocks.mockclient(
         generateNickname = new GenerateNicknameMock(
           createNicknameMock = req => Future.successful(
             PersonReply(
@@ -22,8 +24,8 @@ class NicknameMockedSpec extends WordSpec with Matchers with Eventually {
       )
         .generateNickname
         .createNickname(
-          request = aksharp.funWithNames.mocks.aPersonRequest(
-            person = aksharp.funWithNames.mocks.aPerson(
+          request = aPersonRequest(
+            person = aPerson(
               name = "Alex",
               age = 42,
               `type` = "father"

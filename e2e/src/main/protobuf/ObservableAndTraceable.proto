@@ -10,7 +10,7 @@ option (scalapb.options) = {
   preserve_unknown_fields: false
 };
 
-package com.example.api;
+package io.github.aksharp.codegen.example.api;
 
 message ObservableAndTraceableBase {
     string serviceInstanceCorrelationId = 1;

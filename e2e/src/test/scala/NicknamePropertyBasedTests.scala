@@ -1,7 +1,8 @@
 
 import org.scalacheck.Prop.forAll
 import org.scalacheck.{Gen, Properties}
-
+import io.github.aksharp.codegen.example.funWithNames.mocks._
+import io.github.aksharp.codegen.example.funWithNames._
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 
@@ -22,11 +23,11 @@ object NicknamePropertyBasedTests extends Properties("Nickname generator propert
       val expectedTransformation = s"${person.name}, the $suffix"
       println(s"%%% expectedTransformation = $expectedTransformation")
 
-      val client = aksharp.funWithNames.mocks.mockclient(
+      val client = mockclient(
         generateNickname = new GenerateNicknameMock(
           createNicknameMock = req => Future.successful(
             PersonReply(
-              nickname = s"${req.person.getOrElse(name, "")}, the $suffix"
+              nickname = s"${req.person.map(_.name).getOrElse(name, "")}, the $suffix"
             )
           )
         )
