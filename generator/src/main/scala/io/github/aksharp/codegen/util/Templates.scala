@@ -373,7 +373,7 @@ object Templates {
 
        {{#services}}
 
-       class {{serviceTypeName}}[FF](
+       class {{serviceTypeName}}[FF, C <: FeatureFlagsConfig](
 
         {{#serviceMethods}}
           {{#value}}
@@ -384,12 +384,12 @@ object Templates {
 
        )(
          implicit observableAndTraceableService: ObservableAndTraceableService[Task],
-         featureFlagsConfig: FeatureFlagsConfig,
+         config: C,
          scheduler: Scheduler,
 
         {{#serviceMethods}}
           {{#value}}
-            {{methodName}}RunnerAndObserver: RunnerAndObserver[Task, FF, {{methodInputType}}, {{methodOutputType}}]{{separator}}
+            {{methodName}}RunnerAndObserver: RunnerAndObserver[Task, FF, {{methodInputType}}, {{methodOutputType}}, C]{{separator}}
           {{/value}}
         {{/serviceMethods}}
 
