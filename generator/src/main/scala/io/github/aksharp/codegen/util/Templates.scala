@@ -351,51 +351,6 @@ object Templates {
       |{{/root}}
       |""".stripMargin
 
-  /*
-object {{methodName}}FeatureFlags extends FeatureFlags[Task, {{methodName}}FeatureFlags] {
-override def fromBytes(bytes: Array[Byte]): Either[Throwable, {{methodName}}FeatureFlags] =
-  FromBytes[{{methodName}}FeatureFlags](bytes)
-}
-*/
-
-
-  /*
-  {{#m}}
-  override def {{methodName}}(req: {{methodInputType}}): Future[{{methodOutputType}}] = {
-    implicit val ot: ObservableAndTraceable = req.observableAndTraceable
-
-    (for {
-      finalResponse <- runAndObservable.runAndObserve(
-        action = validateAndProcess,
-        input = req
-      )
-    } yield {
-      finalResponse
-    }).runToFuture(s)
-  }
-
-  private def validateAndProcess(
-                                  {{methodName}}FeatureFlags: FF,
-                                  input: {{methodInputType}}
-                                ): Task[{{methodOutputType}}] = {
-    (for {
-      validatedRequest <- EitherT[Task, {{methodOutputType}}, {{methodInputType}}](
-        {{methodInputType}}Validator.validate(
-          item = input
-        )
-      )
-      response <- EitherT.liftF[Task, {{methodOutputType}}, {{methodOutputType}}](
-        {{methodInputType}}Processor.process(
-          featureFlags = {{methodName}}FeatureFlags,
-          validatedRequest = validatedRequest
-        )
-      )
-    } yield {
-      response
-    }).value.map(_.merge)
-  }
-{{/m}}
-   */
   val services: String =
     """
        {{#root}}
@@ -404,16 +359,16 @@ override def fromBytes(bytes: Array[Byte]): Either[Throwable, {{methodName}}Feat
 
        import cats.data.EitherT
        import {{basePackageName}}._
-       import com.tremorvideo.api.observable.ObservableAndTraceable
-       import com.tremorvideo.api.services.ObservableAndTraceableService
        import monix.eval.Task
        import monix.execution.Scheduler
-       import io.github.aksharp.tc._
        import scala.concurrent.Future
-       import com.tremorvideo.lib.feature.flags._
        import io.circe.generic.auto._
        import monix.eval.Task
        import {{basePackageName}}._
+       import com.tremorvideo.api.models._
+       import com.tremorvideo.api.services._
+       import com.tremorvideo.api.interfaces._
+       import com.tremorvideo.api.observable._
 
 
        {{#services}}
@@ -487,62 +442,6 @@ override def fromBytes(bytes: Array[Byte]): Either[Throwable, {{methodName}}Feat
        {{/root}}
       """.stripMargin
 
-  val services123: String =
-    """
-      |{{#root}}
-      |
-      |package {{basePackageName}}.services
-      |
-      |import cats.data.EitherT
-      |import {{basePackageName}}._
-      |import com.tremorvideo.api.observable.ObservableAndTraceable
-      |import com.tremorvideo.api.services.ObservableAndTraceableService
-      |import monix.eval.Task
-      |import monix.execution.Scheduler
-      |import io.github.aksharp.tc._
-      |import scala.concurrent.Future
-      |import com.tremorvideo.lib.feature.flags.RunAndObservable
-      |import io.circe.generic.auto._
-      |import monix.eval.Task
-      |import {{basePackageName}}._
-      |
-      |
-      |{{#serviceMethods}}
-      |{{#methods}}
-      |
-      |
-      |class {{serviceTypeName}}{{methodInputType}}{{methodOutputType}}Service[FF](
-      |                      {{methodInputType}}Validator: Validator[Task, {{methodInputType}}, {{methodOutputType}}],
-      |                      {{methodInputType}}Processor: Processor[Task, FF, {{methodInputType}}, {{methodOutputType}}]
-      |                    )(
-      |                    implicit observableAndTraceableService: com.tremorvideo.api.services.ObservableAndTraceableService[Task],
-      |                     featureFlagsConfig: com.tremorvideo.lib.feature.flags.FeatureFlagsConfig,
-      |                     s: Scheduler,
-      |                     runAndObservable: RunAndObservable[Task, FF, {{methodInputType}}, {{methodOutputType}}]
-      |                    ) extends {{serviceTypeName}}Grpc.{{serviceTypeName}} {
-      |
-      |{{#m}}
-      |  override def {{methodName}}(req: {{methodInputType}}): Future[{{methodOutputType}}] = {
-      |    implicit val ot: ObservableAndTraceable = req.observableAndTraceable
-      |
-      |    (for {
-      |      finalResponse <- runAndObservable.runAndObserve(
-      |        action = validateAndProcess,
-      |        input = req
-      |      )
-      |    } yield {
-      |      finalResponse
-      |    }).runToFuture(s)
-      |  }
-      |{{/m}}
-      |
-      |
-      |}
-      |{{/methods}}
-      |{{/serviceMethods}}
-      |
-      |{{/root}}
-      """.stripMargin
 
   val client: String =
     """
