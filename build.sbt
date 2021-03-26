@@ -8,7 +8,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 resolvers += Resolver.sonatypeRepo("releases")
 
 ThisBuild / scalaVersion := Scala213
-ThisBuild / version := "0.7.0-SNAPSHOT"
+ThisBuild / version := "0.8.0-SNAPSHOT"
 ThisBuild / organization := "io.github.aksharp"
 
 resolvers += Resolver.sonatypeRepo("public")
@@ -63,7 +63,7 @@ lazy val e2e = (project in file("e2e"))
       libraryDependencies ++= Seq(
       // private repos (type classes and domain objects to be extracted into public repo)
 //      "com.tremorvideo" %% "lib-feature-flags" % "4.1.0-SNAPSHOT",
-      "com.tremorvideo" %% "api" % "2.3.1",
+      "com.tremorvideo" %% "api" % "2.4.0",
 
 //      // type classes
 //      "io.github.aksharp" %% "scala-type-classes" % "0.1.5",

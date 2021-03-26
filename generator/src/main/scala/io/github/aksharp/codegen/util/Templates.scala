@@ -377,8 +377,7 @@ object Templates {
 
         {{#serviceMethods}}
           {{#value}}
-             {{methodInputType}}Validator: Validator[Task, {{methodInputType}}, {{methodOutputType}}],
-             {{methodInputType}}Processor: Processor[Task, FF, {{methodInputType}}, {{methodOutputType}}]
+             {{methodInputType}}GrpcService: GrpcService[Task, FF, {{methodInputType}}, {{methodOutputType}}]
           {{/value}}{{separator}}
         {{/serviceMethods}}
 
@@ -416,12 +415,13 @@ object Templates {
             )(implicit ot: ObservableAndTraceable): Task[{{methodOutputType}}] = {
               (for {
                 validatedRequest <- EitherT[Task, {{methodOutputType}}, {{methodInputType}}](
-                  {{methodInputType}}Validator.validate(
+                  {{methodInputType}}GrpcService.validate(
+                    featureFlags = featureFlags,
                     item = input
                   )
                 )
                 response <- EitherT.liftF[Task, {{methodOutputType}}, {{methodOutputType}}](
-                  {{methodInputType}}Processor.process(
+                  {{methodInputType}}GrpcService.process(
                     featureFlags = featureFlags,
                     validatedRequest = validatedRequest
                   )
