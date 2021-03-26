@@ -413,7 +413,7 @@ object Templates {
             private def {{methodName}}ValidateAndProcess(
               featureFlags: FF,
               input: {{methodInputType}}
-            ): Task[{{methodOutputType}}] = {
+            )(implicit ot: ObservableAndTraceable): Task[{{methodOutputType}}] = {
               (for {
                 validatedRequest <- EitherT[Task, {{methodOutputType}}, {{methodInputType}}](
                   {{methodInputType}}Validator.validate(
