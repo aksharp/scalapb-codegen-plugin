@@ -90,8 +90,8 @@ object DomainService {
             Field(
               fieldName = if (reservedFieldNames.contains(fieldName)) s"`$fieldName`" else fieldName,
               fieldTypeName = scalaType,
-              fieldGenerator = toFieldGenerator(scalaType),
-              fieldForExpressionGenerator = toFieldForExpressionGenerator(scalaType),
+              fieldGenerator = toFieldGenerator(scalaType, field),
+              fieldForExpressionGenerator = toFieldForExpressionGenerator(scalaType, field),
               fieldNameOrOptionalOrSeq = toFieldNameForAssignment(field)
             )
           }
@@ -124,8 +124,13 @@ object DomainService {
     }
   }
 
+  private def toQualifiedCommaSeparatedListOfEnumValues(fileDescriptor: Descriptors.FieldDescriptor): String = {
+    fileDescriptor.getEnumType.toProto.getValueList.asScala.map(_.getName).map(v => s"${fileDescriptor.getEnumType.getName}.$v" ).mkString(", ")
+  }
+
   def toFieldGenerator(
-                        scalaType: String
+                        scalaType: String,
+                        fileDescriptor: Descriptors.FieldDescriptor
                       ): String = {
     val generators = Map(
       "String" -> "Gen.alphaNumStr.sample.get",
@@ -144,14 +149,21 @@ object DomainService {
 
       "Array[Byte]" -> "Gen.alphaNumStr.sample.get.getBytes"
     )
-    generators.getOrElse(
+    generators
+      .getOrElse(
       scalaType,
-      s"a${scalaType.replace("[","").replace("]","")}()"
+
+        if (fileDescriptor.getJavaType == JavaType.ENUM) {
+          s"""Gen.oneOf(${toQualifiedCommaSeparatedListOfEnumValues(fileDescriptor)}).sample.get"""
+        } else {
+          s"a${scalaType.replace("[", "").replace("]", "")}()"
+        }
     )
   }
 
   def toFieldForExpressionGenerator(
-                                     scalaType: String
+                                     scalaType: String,
+                                     fileDescriptor: Descriptors.FieldDescriptor
                                    ): String = {
     val generators = Map(
       "String" -> "Gen.alphaNumStr",
@@ -172,7 +184,11 @@ object DomainService {
     )
     generators.getOrElse(
       scalaType,
-      s"${scalaType.replace("[","").replace("]","")}Gen()"
+      if (fileDescriptor.getJavaType == JavaType.ENUM) {
+        s"""Gen.oneOf(${toQualifiedCommaSeparatedListOfEnumValues(fileDescriptor)})"""
+      } else {
+        s"${scalaType.replace("[","").replace("]","")}Gen()"
+      }
     )
   }
 
@@ -191,7 +207,8 @@ object DomainService {
 
     fileDescriptor.getJavaType match {
       case JavaType.MESSAGE => fileDescriptor.toProto.getTypeName.split("\\.").last
-      case JavaType.ENUM => "JavaType.ENUM is not yet supported"
+      //fileDescriptor.getEnumType.toProto.getValueList.asScala.map(_.getName).mkString(",") //
+      case JavaType.ENUM => fileDescriptor.getEnumType.getName // "JavaType.ENUM is not yet supported"
       case javaType if fileDescriptor.hasOptionalKeyword => m.get(javaType).map(t => s"Option[$t]").getOrElse(s"Could not find match for JavaType: ${javaType.toString}")
       case javaType => m.getOrElse(javaType, s"Could not find match for JavaType: ${javaType.toString}")
     }

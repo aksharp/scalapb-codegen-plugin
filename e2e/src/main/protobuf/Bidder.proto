@@ -13,6 +13,13 @@ option (scalapb.options) = {
 
 package io.github.aksharp.codegen.example.bidder;
 
+enum Currency {
+    USD = 0;
+    CAD = 1;
+    EUR = 2;
+    GBP = 3;
+}
+
 message UserData {
     int32 age = 1;
     string zipCode = 2;
@@ -39,6 +46,7 @@ message BidRequest {
 message BidResponse {
     int64 placementId = 1;
     double bidPrice = 2;
+    Currency currency = 3;
 }
 
 message NoBidResponse {
